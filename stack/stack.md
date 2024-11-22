@@ -1,5 +1,197 @@
 ## 스택
 
+### 스택의 ADT
+
+- isEmpty
+  - boolean
+- push
+  - void
+  - 가장 최근 값을 업데이트함
+- pop
+  - 최근 값을 제거하고 그 값을 리턴
+- top
+  - 현재 스택의 가장 최근 값
+- size
+  - 스택에 저장된 값의 크기
+
+```js
+class Count {
+  constructor() {
+    this.items = [];
+  }
+
+  push(x) {
+    this.items.push(x);
+    return this;
+  }
+
+  pop() {
+    if (!this.isEmpty()) {
+      return this.items.pop();
+    } else {
+      throw new Error('this stack is empty');
+    }
+  }
+
+  top() {
+    if (!this.isEmpty()) {
+      return this.items[this.items.length - 1];
+    } else {
+      throw new Error('this stack is empty');
+    }
+  }
+
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  size() {
+    return this.items.length;
+  }
+}
+```
+
+### 괄호 회전하기
+
+#### 문제
+
+> 다음 규칙을 지키는 문자열을 올바른 괄호 문자열이라고 정의합니다.
+> • “( )”, “[ ]”, “{ }”는 모두 올바른 괄호 문자열입니다.
+> • 만약 A가 올바른 괄호 문자열이라면, “(A)”, “[A]”, “{A}”도 올바른 괄호 문자열입니다. 예를 들
+> 어 “[ ]”가 올바른 괄호 문자열이므로, “( [ ] )”도 올바른 괄호 문자열입니다.
+> • 만약 A, B가 올바른 괄호 문자열이라면, AB도 올바른 괄호 문자열입니다. 예를 들어 “{ }”와
+> “( [ ] )”가 올바른 괄호 문자열이므로, “{ } ( [ ] )”도 올바른 괄호 문자열입니다.
+> 대괄호, 중괄호, 그리고 소괄호로 이루어진 문자열 s가 매개변수로 주어집니다. 이 s를 왼쪽으로
+> x (0 ≤ x < (s의 길이)) 칸만큼 회전시켰을 때 s가 올바른 괄호 문자열이 되게 하는 x의 개수를 반
+> 환하는 solution( ) 함수를 완성하세요.
+
+#### 풀이
+
+```js
+function rotateParentheses(s) {
+  // s의 길이만큼 돌려서 괄호가 쌍이 맞는지 체크해야함
+  // s를 직접 돌리기보단 인덱스를 활용해서 돌린걸 가정해서 계산하는 것이 좋은 방법
+  const rotateLength = s.length;
+  let answer = 0;
+
+  // for 문을 이중으로 돌리는 이유는 인덱스로만 돌린걸 계산하기 위함임
+  // 또한 i 를 s.length만큼 돌리는 이유는 마지막 루프가 즉 s.length이기 때문에
+  // s.length만큼 회전한 것을 의미하기 때문이다.
+  for (let i = 0; i < s.length; i++) {
+    const stack = [];
+    let isCorrect = true;
+
+    for (let j = 0; j < rotateLength; j++) {
+      // (i + j) % rotateLength의 이유는 rotateLength를 벗어났을때를 방지하기 위함이다
+      const cursor = s[(i + j) % rotateLength];
+
+      if (cursor === '(' || cursor === '{' || cursor === '[') {
+        stack.push(cursor);
+      } else {
+        if (stack.length === 0) {
+          isCorrect = false;
+          break;
+        } else {
+          const top = stack[stack.length - 1];
+
+          if (cursor === ')' && top === '(') {
+            stack.pop();
+          } else if (cursor === '}' && top === '{') {
+            stack.pop();
+          } else if (cursor === ']' && top === '[') {
+            stack.pop();
+          } else {
+            isCorrect = false;
+          }
+        }
+      }
+    }
+
+    // 매 루프가 종료 될때마다 isCorrect를 먼저 체크한다.
+    // !isCorrect의 의미는 맞출 괄호가 없다
+    if (isCorrect && stack.length === 0) {
+      answer += 1;
+    }
+  }
+
+  return answer;
+}
+```
+
+### 짝지어 제거하기
+
+#### 문제
+
+> 알파벳 소문자로 구성된 문자열에서 같은 알파벳이 2개 붙어 있는 짝을 찾습니다. 짝을 찾은 다음
+> 에는 그 둘을 제거한 뒤 앞뒤로 문자열을 이어붙입니다. 이 과정을 반복해서 문자열을 모두 제거한
+> 다면 짝지어 제거하기가 종료됩니다. 문자열 S가 주어졌을 때 짝지어 제거하기를 성공적으로 수행
+> 할 수 있는지 반환하는 함수를 완성하세요. 성공적으로 수행할 수 있으면 1을, 아니면 0을 반환해
+> 주면 됩니다. 예를 들어 문자열 S가 baabaa라면
+> • baabaa → bbaa → aa
+> 순서로 문자열을 모두 제거할 수 있으므로 1을 반환합니다
+
+#### 풀이
+
+```js
+// 문제의 핵심은 스택에 쌓인 top과 현재 값을 비교하는 것
+function pairChecker(s) {
+  const stack = [];
+
+  for (char of s) {
+    if (stack.length > 0 && stack[stack.length - 1] === char) {
+      stack.pop();
+    } else {
+      stack.push(char);
+    }
+  }
+
+  return stack.length === 0 ? 1 : 0;
+}
+```
+
+### 주식 가격
+
+#### 문제
+
+> n초 간의 주가를 초 단위로 기록한 배열 prices가 매개변수로 주어질 때, 각 초의 주가를 기준으로
+> 해당 초부터 n초 사이에 가격이 떨어지지 않은 시간은 몇 초인지 배열에 담아 반환하는 solution( )
+> 함수를 완성하세요
+
+#### 풀이
+
+```js
+function stock(prices) {
+  // answer은 정답 제출을 위한 배열, 기본 값을 0으로 채워 놓음
+  const answer = new Array(prices.length).fill(0);
+  const n = prices.length;
+  // 스택을 0을 미리 채워놓은 이유는 첫 값은 떨어지지 않기 때문
+  const stack = [0];
+
+  // 스택에는 가격이 유지된 길이를 계산하기 위해 루프 돌고 있는 인덱스를 채워준다
+  for (let i = 1; i < n; i++) {
+    // while 문으로 이전 값이랑 현재 값을 비교해 떨어졌는지에 대해 계속 비교해준다
+    // stack은 인덱스를 담고 있기 때문에 top값을 이용해 대소를 비교,
+    // 만약 가격이 떨어졌다면 스택에서 이전 인덱스를 제거 (가격이 떨어졌기 때문에)
+    while (stack.length > 0 && prices[i] < prices[stack[stack.length - 1]]) {
+      const j = stack.pop();
+      // answer[j]의 값을 현재 인덱스 - 스택 top값으로 해주는 이유는
+      // 그 만큼 가격이 유지됐다는 의미
+      answer[j] = i - j;
+    }
+    // 모든 가격비교가 끝나면 현재 인덱스를 스택에 채워준다
+    stack.push(i);
+  }
+
+  // 가격비교 이후에 스택을 이용헤 가격이 유지된 기간을 확정시켜준다
+  while (stack.length > 0) {
+    const j = stack.pop();
+    answer[j] = n - 1 - j;
+  }
+
+  return answer;
+}
+```
+
 ### 크레인 인형 뽑기 게임
 
 #### 문제
