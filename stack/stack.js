@@ -32,46 +32,47 @@ function craneGame(board, moves) {
   return answer;
 }
 
-console.log(
-  'CRANE :::',
-  craneGame(
-    [
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 3],
-      [0, 2, 5, 0, 1],
-      [4, 2, 4, 4, 2],
-      [3, 5, 1, 3, 1]
-    ],
-    [1, 5, 3, 5, 1, 2, 1, 4]
-  )
-);
+// console.log(
+//   'CRANE :::',
+//   craneGame(
+//     [
+//       [0, 0, 0, 0, 0],
+//       [0, 0, 1, 0, 3],
+//       [0, 2, 5, 0, 1],
+//       [4, 2, 4, 4, 2],
+//       [3, 5, 1, 3, 1]
+//     ],
+//     [1, 5, 3, 5, 1, 2, 1, 4]
+//   )
+// );
 
 function editTable(n, k, cmd) {
-  // 항상 문제를 풀때, 인덱스 계산으로만 해결할 수 있는지 판단해보기
-  const deleted = [];
+  // n 위아래에 하나씩 여유 공간을 주는 것이 좋다.
+  // 매번 n 배열의 값을 변경해서 새로 생성하는것보단, 위 아래를 이동했을때의 인덱스를 만들어 관리하는것이 더 좋다.
+  // up은 위로 올렸을때의 index, down은 내렸을때의 index
   const up = [...new Array(n + 2)].map((_, i) => i - 1);
   const down = [...new Array(n + 1)].map((_, i) => i + 1);
+  const deleted = [];
 
   k += 1;
 
-  for (let c of cmd) {
+  for (const c of cmd) {
     if (c === 'C') {
       deleted.push(k);
       up[down[k]] = up[k];
       down[up[k]] = down[k];
       k = n < down[k] ? up[k] : down[k];
-    } else if (c === 'Z') {
-      const pop = deleted.pop();
-      up[down[pop]] = pop;
-      down[up[pop]] = pop;
+    } else if (c === 'D') {
+      const restore = deleted.pop();
+      up[down[k]] = restore;
+      down[up[k]] = restore;
     } else {
-      const [command, count] = c.split(' ');
-
-      if (command === 'U') {
+      const [act, count] = c.split(' ');
+      if (act === 'U') {
         for (let i = 0; i < count; i++) {
           k = up[k];
         }
-      } else if (command === 'D') {
+      } else {
         for (let i = 0; i < count; i++) {
           k = down[k];
         }
@@ -81,15 +82,15 @@ function editTable(n, k, cmd) {
 
   const answer = new Array(n).fill('O');
 
-  for (const i of deleted) {
-    answer[i - 1] = 'X';
+  for (d of deleted) {
+    answer[d - 1] = 'X';
   }
 
   return answer.join('');
 }
 
-// console.log(editTable(8, 2, ['D 2', 'C', 'U 3', 'C', 'D 4', 'C', 'U 2', 'Z', 'Z']));
-// console.log(editTable(8, 2, ['D 2', 'C', 'U 3', 'C', 'D 4', 'C', 'U 2', 'Z', 'Z']) === 'OOOOXOOO');
+console.log(editTable(8, 2, ['D 2', 'C', 'U 3', 'C', 'D 4', 'C', 'U 2', 'Z', 'Z']));
+console.log(editTable(8, 2, ['D 2', 'C', 'U 3', 'C', 'D 4', 'C', 'U 2', 'Z', 'Z']) === 'OOOOXOOO');
 
 function parentheses(s) {
   const stack = [];
