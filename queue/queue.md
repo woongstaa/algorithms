@@ -176,3 +176,132 @@ function josephusProblem(n, k) {
   return queue.pop();
 }
 ```
+
+### 기능개발
+
+#### 문제
+
+> 프로그래머스 팀에서는 기능 개선 작업을 수행 중입니다. 각 기능은 진도가 100%일 때 서비스에 반영할 수 있습니다.
+> 또, 각 기능의 개발속도는 모두 다르기 때문에 뒤에 있는 기능이 앞에 있는 기능보다 먼저 개발될 수 있고, 이때 뒤에 있는 기능은 앞에 있는 기능이 배포될 때 함께 배포됩니다.
+> 먼저 배포되어야 하는 순서대로 작업의 진도가 적힌 정수 배열 progresses와 각 작업의 개발 속도가 적힌 정수 배열 speeds가 주어질 때 각 배포마다 몇 개의 기능이 배포되는지를 return 하도록 solution 함수를 완성하세요.
+>
+> 제한 사항
+> 작업의 개수(progresses, speeds배열의 길이)는 100개 이하입니다.
+> 작업 진도는 100 미만의 자연수입니다.
+> 작업 속도는 100 이하의 자연수입니다.
+> 배포는 하루에 한 번만 할 수 있으며, 하루의 끝에 이루어진다고 가정합니다. 예를 들어 진도율이 95%인 작업의 개발 속도가 하루에 4%라면 배포는 2일 뒤에 이루어집니다.
+>
+> 입출력 예
+> progresses speeds return
+> [93, 30, 55] [1, 30, 5] [2, 1]
+> [95, 90, 99, 99, 80, 99] [1, 1, 1, 1, 1, 1] [1, 3, 2]
+>
+> 입출력 예 설명
+>
+> 입출력 예 #1
+> 첫 번째 기능은 93% 완료되어 있고 하루에 1%씩 작업이 가능하므로 7일간 작업 후 배포가 가능합니다.
+> 두 번째 기능은 30%가 완료되어 있고 하루에 30%씩 작업이 가능하므로 3일간 작업 후 배포가 가능합니다. 하지만 이전 첫 번째 기능이 아직 완성된 상태가 아니기 때문에 첫 번째 기능이 배포되는 7일째 배포됩니다.
+> 세 번째 기능은 55%가 완료되어 있고 하루에 5%씩 작업이 가능하므로 9일간 작업 후 배포가 가능합니다.
+> 따라서 7일째에 2개의 기능, 9일째에 1개의 기능이 배포됩니다.
+>
+> 입출력 예 #2
+> 모든 기능이 하루에 1%씩 작업이 가능하므로, 작업이 끝나기까지 남은 일수는 각각 5일, 10일, 1일, 1일, 20일, 1일입니다. 어떤 기능이 먼저 완성되었더라도 앞에 있는 모든 기능이 완성되지 않으면 배포가 불가능합니다.
+> 따라서 5일째에 1개의 기능, 10일째에 3개의 기능, 20일째에 2개의 기능이 배포됩니다.
+
+#### 풀이
+
+```js
+function featureDevelopment(progresses, speeds) {
+  const answer = [];
+  const workDates = progresses.map((progress, index) => Math.ceil((100 - progress) / speeds[index]));
+
+  let count = 0;
+  let maxWorkDate = workDates[0];
+
+  for (let i = 0; i < workDates.length; i++) {
+    if (workDates[i] <= maxWorkDate) {
+      count++;
+    } else {
+      answer.push(count);
+      maxWorkDate = workDates[i];
+      count = 1;
+    }
+  }
+
+  answer.push(count);
+
+  return answer;
+}
+```
+
+- 문제 풀이의 핵심은 일할 수 있는 날짜를 구하는 것,
+  - 100에서 현재 진행도를 뺀 뒤 속도로 나눠주면, 몇 일 뒤에 작업이 완료되는지 알 수 있다.
+- 배포 가능한 날짜를 maxWorkDate로 명명하여 현재가 maxWorkDate보다 작다면 작업일이 다음 루프로 넘어가기 때문에 하나씩 올려준다
+
+### 카드뭉치
+
+#### 문제
+
+#### 풀이
+
+```js
+function cardsBundle(cards1, cards2, goal) {
+  cards1 = new Queue(cards1);
+  cards2 = new Queue(cards2);
+  goal = new Queue(goal);
+
+  while (!goal.isEmpty()) {
+    if (!cards1.isEmpty() && cards1.first() === goal.first()) {
+      goal.pop();
+      cards1.pop();
+    } else if (!cards2.isEmpty() && cards2.first() === goal.first()) {
+      goal.pop();
+      cards2.pop();
+    } else {
+      break;
+    }
+  }
+
+  return goal.isEmpty() ? 'Yes' : 'No';
+}
+```
+
+### 다리를 지나는 트럭
+
+#### 문제
+
+#### 풀이
+
+```js
+function trucksOnTheBridge(bridgeLength, weight, truckWeights) {
+  let time = 0;
+  let currentWeight = 0;
+
+  const truckQueue = new Queue(truckWeights);
+  const bridgeQueue = new Queue([]);
+
+  while (!truckQueue.isEmpty() || !bridgeQueue.isEmpty()) {
+    time++;
+
+    // 1. 다리를 건넌 트럭 제거
+    if (!bridgeQueue.isEmpty() && bridgeQueue.first()[1] === 0) {
+      const truck = bridgeQueue.pop();
+      currentWeight -= truck[0];
+    }
+
+    // 2. 새로운 트럭 추가
+    if (!truckQueue.isEmpty() && weight - currentWeight >= truckQueue.first()) {
+      const truck = truckQueue.pop();
+      bridgeQueue.push([truck, bridgeLength]); // push 메서드 호출
+      currentWeight += truck;
+    }
+
+    // 3. 다리 위 트럭의 남은 시간 감소
+    for (let i = bridgeQueue.front; i < bridgeQueue.rear; i++) {
+      bridgeQueue.items[i][1]--; // items 배열에 직접 접근
+    }
+  }
+
+  return time;
+}
+```

@@ -125,4 +125,37 @@ function trucksOnTheBridge(bridgeLength, weight, truckWeights) {
   return time;
 }
 
-console.log(trucksOnTheBridge(2, 10, [7, 4, 5, 6]));
+// console.log(trucksOnTheBridge(2, 10, [7, 4, 5, 6]));
+
+function solution(priorities, location) {
+  let answer = 0;
+
+  // 우선순위와 위치 정보를 큐에 저장
+  const prioritiesWithLocation = priorities.map((priority, i) => ({
+    priority,
+    index: i
+  }));
+
+  const queue = new Queue(prioritiesWithLocation);
+
+  // 큐가 비어있지 않을 동안 반복
+  while (!queue.isEmpty()) {
+    const target = queue.pop();
+    console.log(queue);
+
+    // 현재 큐의 유효한 요소들에서 우선순위를 비교
+    if (queue.items.slice(queue.front, queue.rear).some((item) => item.priority <= target.priority)) {
+      queue.push(target); // 우선순위가 더 높은 프로세스가 있다면 다시 큐에 넣음
+    } else {
+      answer++; // 프로세스 실행
+
+      if (target.index === location) {
+        return answer; // 목표 프로세스 실행 순서 반환
+      }
+    }
+  }
+
+  return answer;
+}
+
+// console.log('QUEUE :::', solution([1, 1, 9, 1, 1, 1], 5));
