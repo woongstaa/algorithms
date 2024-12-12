@@ -131,4 +131,39 @@ function openChat(record) {
   return answer;
 }
 
-console.log(openChat(['Enter uid1234 Muzi', 'Enter uid4567 Prodo', 'Leave uid1234', 'Enter uid1234 Prodo', 'Change uid4567 Ryan']));
+// console.log(openChat(['Enter uid1234 Muzi', 'Enter uid4567 Prodo', 'Leave uid1234', 'Enter uid1234 Prodo', 'Change uid4567 Ryan']));
+
+function bestAlbum(genres, plays) {
+  const genresHash = {};
+  const playsHash = {};
+
+  for (let i = 0; i < genres.length; i++) {
+    if (genresHash[genres[i]]) {
+      genresHash[genres[i]] = genresHash[genres[i]] + plays[i];
+    } else {
+      genresHash[genres[i]] = plays[i];
+    }
+  }
+
+  for (let i = 0; i < plays.length; i++) {
+    if (!playsHash[genres[i]]) {
+      playsHash[genres[i]] = [];
+    }
+
+    playsHash[genres[i]].push([i, plays[i]]);
+  }
+
+  const sortedGenresHash = Object.keys(genresHash).sort((a, b) => genresHash[b] - genresHash[a]);
+
+  const answer = [];
+
+  for (const genre of sortedGenresHash) {
+    const sortedPlaysHash = playsHash[genre].sort((a, b) => (a[1] === b[1] ? a[0] - b[0] : b[1] - a[1]));
+
+    answer.push(...sortedPlaysHash.slice(0, 2).map(([index]) => index));
+  }
+
+  return answer;
+}
+
+console.log('BEST_ALBUM :::', bestAlbum(['classic', 'pop', 'classic', 'classic', 'pop'], [500, 600, 150, 800, 2500]));
