@@ -166,4 +166,38 @@ function bestAlbum(genres, plays) {
   return answer;
 }
 
-console.log('BEST_ALBUM :::', bestAlbum(['classic', 'pop', 'classic', 'classic', 'pop'], [500, 600, 150, 800, 2500]));
+// console.log('BEST_ALBUM :::', bestAlbum(['classic', 'pop', 'classic', 'classic', 'pop'], [500, 600, 150, 800, 2500]));
+
+function reportResult(ids, reports, k) {
+  const history = {};
+  const count = {};
+  const answer = new Array(ids.length).fill(0);
+
+  for (const id of ids) {
+    history[id] = [];
+    count[id] = 0;
+  }
+
+  for (const report of reports) {
+    const [from, to] = report.split(' ');
+
+    if (!history[from].includes(to)) {
+      history[from].push(to);
+      count[to]++;
+    }
+  }
+
+  for (let i = 0; i < ids.length; i++) {
+    const target = ids[i];
+
+    for (item of history[target]) {
+      if (count[item] >= k) {
+        answer[i]++;
+      }
+    }
+  }
+
+  return answer;
+}
+
+console.log('REPORT_RESULT :::', reportResult(['muzi', 'frodo', 'apeach', 'neo'], ['muzi frodo', 'apeach frodo', 'frodo neo', 'muzi neo', 'apeach muzi'], 2));
