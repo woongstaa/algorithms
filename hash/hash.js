@@ -200,4 +200,84 @@ function reportResult(ids, reports, k) {
   return answer;
 }
 
-console.log('REPORT_RESULT :::', reportResult(['muzi', 'frodo', 'apeach', 'neo'], ['muzi frodo', 'apeach frodo', 'frodo neo', 'muzi neo', 'apeach muzi'], 2));
+// console.log('REPORT_RESULT :::', reportResult(['muzi', 'frodo', 'apeach', 'neo'], ['muzi frodo', 'apeach frodo', 'frodo neo', 'muzi neo', 'apeach muzi'], 2));
+
+function combinations(arr, n) {
+  // n이 1이면, 들어온 배열의 각각의 요소를 리턴 [b, c] => [[b], [c]]
+  if (n === 1) {
+    return arr.map((v) => [v]);
+  }
+
+  const result = [];
+
+  // 이 함수를 통해 n이 1이 될때까지 조합을 재귀로 만들어 결과 값에 푸시
+  arr.forEach((fixed, idx, arr) => {
+    // 남은 값은
+    const rest = arr.slice(idx + 1);
+    const combis = combinations(rest, n - 1);
+    const combine = combis.map((v) => [fixed, ...v]);
+    result.push(...combine);
+  });
+
+  return result;
+}
+
+function renewalMenu(orders, course) {
+  const answer = [];
+
+  for (const c of course) {
+    const menu = [];
+    for (const order of orders) {
+      const orderArr = order.split('').sort();
+
+      const comb = combinations(orderArr, c);
+
+      menu.push(...comb);
+    }
+
+    const counter = {};
+    for (const m of menu) {
+      const key = m.join('');
+      counter[key] = (counter[key] || 0) + 1;
+    }
+
+    const max = Math.max(...Object.values(counter));
+    if (max > 1) {
+      for (const [key, value] of Object.entries(counter)) {
+        if (value === max) {
+          answer.push(key);
+        }
+      }
+    }
+  }
+
+  return answer.sort();
+}
+
+// renewalMenu(['ABCFG', 'AC', 'CDE', 'ACDE', 'BCFG', 'ACDEH'], [2, 3, 4]);
+
+function failurePlayer(participant, completion) {
+  const playerHash = {};
+
+  for (const p of participant) {
+    playerHash[p] = (playerHash[p] || 0) + 1;
+  }
+
+  for (const c of completion) {
+    playerHash[c]--;
+  }
+
+  for (const key in playerHash) {
+    if (playerHash[key] > 0) {
+      return key;
+    }
+  }
+
+  // for (const [key, value] of Object.entries(playerHash)) {
+  //   if (value > 0) {
+  //     return key;
+  //   }
+  // }
+}
+
+failurePlayer(['leo', 'kiki', 'eden'], ['eden', 'kiki']);
