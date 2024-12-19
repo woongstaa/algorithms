@@ -280,4 +280,127 @@ function failurePlayer(participant, completion) {
   // }
 }
 
-failurePlayer(['leo', 'kiki', 'eden'], ['eden', 'kiki']);
+// failurePlayer(['leo', 'kiki', 'eden'], ['eden', 'kiki']);
+
+function objectIsEqual(obj1, obj2) {
+  if (obj1.length !== obj2.length) return false;
+
+  for (key in obj1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function martDiscount(want, number, discount) {
+  const wantHash = {};
+
+  for (let i = 0; i < want.length; i++) {
+    wantHash[want[i]] = number[i];
+  }
+
+  let answer = 0;
+  for (let i = 0; i < discount.length - 9; i++) {
+    const discount10days = {};
+
+    for (let j = i; j < i + 10; j++) {
+      discount10days[discount[j]] = (discount10days[discount[j]] || 0) + 1;
+    }
+
+    if (objectIsEqual(wantHash, discount10days)) {
+      answer++;
+    }
+  }
+
+  return answer;
+}
+
+// martDiscount(['banana', 'apple', 'rice', 'pork', 'pot'], [3, 2, 2, 2, 1], ['chicken', 'apple', 'apple', 'banana', 'rice', 'apple', 'pork', 'banana', 'pork', 'rice', 'pot', 'banana', 'apple', 'banana']);
+
+function openChat2(record) {
+  const user = {};
+  const answer = [];
+
+  for (const r of record) {
+    const message = r.split(' ');
+
+    if (message[0] !== 'Leave') {
+      user[message[1]] = message[2];
+    }
+  }
+
+  for (const r of record) {
+    const message = r.split(' ');
+
+    if (message[0] === 'Enter') {
+      answer.push(`${user[message[1]]}님이 들어왔습니다.`);
+    } else if (message[0] === 'Leave') {
+      answer.push(`${user[message[1]]}님이 나갔습니다.`);
+    }
+  }
+
+  return answer;
+}
+
+// openChat2(['Enter uid1234 Muzi', 'Enter uid4567 Prodo', 'Leave uid1234', 'Enter uid1234 Prodo', 'Change uid4567 Ryan']);
+
+function reportResult2(ids, report, k) {
+  const answer = [];
+  const reported = {};
+  const needRequest = {};
+
+  for (const r of report) {
+    const command = r.split(' ');
+
+    if (!reported[command[1]]) {
+      reported[command[1]] = new Set();
+    }
+    reported[command[1]].add(command[0]);
+  }
+
+  for (const id in reported) {
+    if (reported[id].size >= k) {
+      for (uid of reported[id]) {
+        needRequest[uid] = (needRequest[uid] || 0) + 1;
+      }
+    }
+  }
+
+  for (id of ids) {
+    if (needRequest[id]) {
+      answer.push(needRequest[id]);
+    } else {
+      answer.push(0);
+    }
+  }
+
+  return answer;
+}
+
+// reportResult2(['muzi', 'frodo', 'apeach', 'neo'], ['muzi frodo', 'apeach frodo', 'frodo neo', 'muzi neo', 'apeach muzi'], 2);
+
+function combinePair(arr, n) {
+  if (n === 1) {
+    return arr.map((v) => [v]);
+  }
+
+  const result = [];
+
+  arr.forEach((fixed, idx, arr) => {
+    const rest = arr.slice(idx + 1);
+    const comb = combinePair(rest, n - 1);
+    result.push(...comb.map((v) => [fixed, ...v]));
+  });
+
+  return result;
+}
+function renewalMenu2(orders, course) {
+  for (const order of orders) {
+    const singleMenu = order.split('');
+  }
+}
+
+renewalMenu2(['ABCFG', 'AC', 'CDE', 'ACDE', 'BCFG', 'ACDEH'], [2, 3, 4]);
+combinePair(['ABCFG', 'AC', 'CDE', 'ACDE', 'BCFG', 'ACDEH'], 3);
