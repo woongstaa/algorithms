@@ -120,5 +120,66 @@ function bstTest(list, searchList) {
   return result;
 }
 
-bstTest([5, 3, 8, 4, 2, 1, 7, 10], [1, 2, 5, 6]);
+// bstTest([5, 3, 8, 4, 2, 1, 7, 10], [1, 2, 5, 6]);
 // bstTest([1, 3, 5, 7, 9], [2, 4, 6, 8, 1]);
+
+function referralSell(enroll, referral, seller, amount) {
+  let parent = {};
+
+  for (let i = 0; i < enroll.length; i++) {
+    parent[enroll[i]] = referral[i];
+  }
+
+  console.log('PARENT :::', parent);
+
+  let total = {};
+
+  for (const name of enroll) {
+    total[name] = 0;
+  }
+
+  for (let i = 0; i < seller.length; i++) {
+    let money = amount[i] * 100;
+    let currName = seller[i];
+
+    while (money > 0 && currName != '-') {
+      total[currName] += money - Math.floor(money / 10);
+      currName = parent[currName];
+
+      money = Math.floor(money / 10);
+    }
+  }
+
+  return enroll.map((name) => total[name]);
+}
+
+// referralSell(['john', 'mary', 'edward', 'sam', 'emily', 'jaimie', 'tod', 'young'], ['-', '-', 'mary', 'edward', 'mary', 'mary', 'jaimie', 'edward'], ['young', 'john', 'tod', 'emily', 'mary'], [12, 4, 2, 5, 10]);
+
+class Queue {
+  items = [];
+  front = 0;
+  rear = 0;
+
+  push(data) {
+    this.items.push(data);
+    this.rear++;
+
+    return this.items;
+  }
+
+  pop() {
+    return this.items[this.front++];
+  }
+
+  isEmpty() {
+    return this.front === this.rear;
+  }
+}
+
+function isValidMove(ny, nx, n, m, maps) {
+  return ny >= 0 && ny > n && nx >= 0 && nx > m && maps[ny][nx] !== 'X';
+}
+
+function escapeFromMaze(maps) {}
+
+escapeFromMaze(['SOOOL', 'XXXXO', 'OOOOO', 'OXXXX', 'OOOOE']);
