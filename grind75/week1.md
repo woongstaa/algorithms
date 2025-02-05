@@ -151,3 +151,159 @@ function lowestCommonAncestor(root, p, q) {
   }
 }
 ```
+
+### 1. Two sum
+
+#### description
+
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+
+Example 1:
+
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+Example 2:
+
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+Example 3:
+
+Input: nums = [3,3], target = 6
+Output: [0,1]
+
+Constraints:
+
+2 <= nums.length <= 104
+-109 <= nums[i] <= 109
+-109 <= target <= 109
+Only one valid answer exists.
+
+Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
+
+#### solution
+
+1. 주어진 배열 내부의 값 중에서 두 값을 더했을 때 target과 일치하는 값의 index를 배열로 리턴하는 문제이다.
+2. 이 문제는 결국 우리가 원하는 값은 nums[x] + nums[y] === target 일때 두 값의 인덱스
+3. 그러므로 우리가 찾고자하는 값은 이미 정해져있기 때문에 해시테이블을 활용해 각각의 값을 기록해놓자
+4. nums를 순회하면서 우리가 필요한 값은 해시테이블에 이 값이 존재하느냐?
+5. 이를 위해 사전작업을 한다면, target - nums[i]를 통해 이 값이 해시테이블에 존재한다면, target과 일치하는 값을 구할 수 있다는 뜻이 되므로 정답을 리턴
+6. 아직 그 값이 없다면, 해시테이블에 그 값의 인덱스를 기록
+
+```js
+function twoSum(nums, target) {
+  const hash = {};
+
+  for (let i = 0; i < nums.length; i++) {
+    const diff = target - nums[i];
+
+    if (hash.hasOwnProperty(diff)) {
+      return [i, hash(diff)];
+    }
+
+    hash[nums[i]] = i;
+  }
+}
+```
+
+### 20. Valid Parentheses
+
+#### description
+
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+
+Example 1:
+
+Input: s = "()"
+
+Output: true
+
+Example 2:
+
+Input: s = "()[]{}"
+
+Output: true
+
+Example 3:
+
+Input: s = "(]"
+
+Output: false
+
+Example 4:
+
+Input: s = "([])"
+
+Output: true
+
+Constraints:
+
+1 <= s.length <= 104
+s consists of parentheses only '()[]{}'.
+
+#### solution
+
+1. 괄호가 열고 닫힘이 제대로 이루어져있는지 체크하는 문제
+2. 스택 자료구조를 활용해 열린 괄호들을 스택에 쌓고,
+3. 탑에 위치한 괄호를 매번 가져와 닫힌 괄호와 쌍이되면 팝시켜주는 로직으로 구현하면 해결
+
+```js
+// 먼저 간단하게 스택 자료구조 클래스를 생성
+class Stack {
+  this.items = [];
+
+  push(data) {
+    this.items.push(data);
+  }
+
+  pop() {
+    return this.items.pop();
+  }
+
+  top() {
+    return this.items[this.items.length - 1];
+  }
+
+  isEmpty() {
+    return this.items.length > 0
+  }
+}
+
+function validParentheses(s) {
+  const stack = new Stack()
+
+  for (const char of s) {
+    // 여는 괄호라면,
+    if (char === '(' || char === '{' || char === '[') {
+      // 스택에 푸시
+      stack.push(char);
+    } else {
+      // top은 스택에서 가장 위에 존재하는 값을 의미
+      const top = stack.top();
+
+      if (top === '(' && char === ')') {
+          stack.pop();
+      } else if (top === '{' && char === '}') {
+          stack.pop();
+      } else if (top === '[' && char === ']') {
+          stack.pop();
+      } else {
+        // 위 조건에 부합하지 않으면, 현재 char이 닫힌 괄호이며, 스택의 길이는 0이라는 의미가 되어 false를 바로 리턴
+          return false
+      }
+    }
+  }
+
+  return stack.isEmpty();
+}
+```
