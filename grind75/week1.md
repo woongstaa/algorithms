@@ -307,3 +307,120 @@ function validParentheses(s) {
   return stack.isEmpty();
 }
 ```
+
+### 141. Linked List Cycle
+
+#### description
+
+Given head, the head of a linked list, determine if the linked list has a cycle in it.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+
+Return true if there is a cycle in the linked list. Otherwise, return false.
+
+Example 1:
+
+Input: head = [3,2,0,-4], pos = 1
+Output: true
+Explanation: There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
+Example 2:
+
+Input: head = [1,2], pos = 0
+Output: true
+Explanation: There is a cycle in the linked list, where the tail connects to the 0th node.
+Example 3:
+
+Input: head = [1], pos = -1
+Output: false
+Explanation: There is no cycle in the linked list.
+
+Constraints:
+
+The number of the nodes in the list is in the range [0, 104].
+-105 <= Node.val <= 105
+pos is -1 or a valid index in the linked-list.
+
+Follow up: Can you solve it using O(1) (i.e. constant) memory?
+
+#### solution
+
+1. 링크드 리스트를 활용한 문제
+2. 투포인터를 이용해 푸는 것이 최선의 방법
+3. 하나의 커서는 한칸씩, 하나의 커서는 두칸씩 이동시키면서 일치되는지 비교한다
+   1. 링크드 리스트가 순환된다면, 어느 순간에는 두 값이 일치될 것이기 떄문에
+4. 아니라면 false를 리턴한다
+5. 시간복잡도가 더 커지지만 Set을 이용해서 푸는것도 가능
+
+```js
+function linkedListCycle(head) {
+  let fast = head;
+  let slow = head;
+
+  while (fast && fast.next) {
+    fast = fast.next.next;
+    slow = slow.next;
+
+    if (fast === slow) {
+      return true;
+    }
+  }
+
+  return false;
+}
+```
+
+### 110. Balanced Binary Tree
+
+#### description
+
+Given a binary tree, determine if it is
+height-balanced
+.
+
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: true
+Example 2:
+
+Input: root = [1,2,2,3,3,null,null,4,4]
+Output: false
+Example 3:
+
+Input: root = []
+Output: true
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 5000].
+-104 <= Node.val <= 104
+
+#### solution
+
+1. 높이가 균형이 잡혔다는 의미는 양쪽 노드의 깊이 차이가 1이내인 것을 의미한다.
+2. dfs를 이용해 풀이한다.
+
+```js
+function balancedBinaryTree(root) {
+  if (!root) return false;
+
+  const getHeight = (node) => {
+    if (!node) return 0;
+
+    // 재귀를 통해 왼쪽 노드 가장 깊은 값과 오른쪽 노드 가장 깊은 값을 가져온다.
+    let left = getHeight(node.left);
+    let right = getHeight(node.right);
+
+    // 재귀를 통해 하위 노드로 내려가다 양 노드의 값이 1이상 차이가 난다면 불균형이라는 의미
+    if (left === -1 || right === -1 || Math.abs(left - right) > 1) {
+      return -1;
+    }
+
+    // 왼쪽과 오른쪽 노드 중 더 큰 값에 1을 더해준다
+    // 1을 더해주는 이유는 현재 노드의 높이까지 필요하기 때문이다
+    return Math.max(left, right) + 1;
+  };
+
+  return getHeight(root) !== -1;
+}
+```

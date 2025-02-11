@@ -171,3 +171,118 @@ function longestPalindrome(s) {
   return s.length > result ? result + 1 : result;
 }
 ```
+
+### 206. Reverse Linked List
+
+#### description
+
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+Example 1:
+
+Input: head = [1,2,3,4,5]
+Output: [5,4,3,2,1]
+Example 2:
+
+Input: head = [1,2]
+Output: [2,1]
+Example 3:
+
+Input: head = []
+Output: []
+
+Constraints:
+
+The number of nodes in the list is the range [0, 5000].
+-5000 <= Node.val <= 5000
+
+Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
+
+#### solution
+
+1. 이 문제는 주어진 링크드 리스트를 뒤집는 문제이다
+2. 변수로 주어진 링크드리스트는 next를 통해 앞으로 진행하면서, 정답에다가 역순으로 담는다
+   1. head -> tail => tail -> head
+
+```js
+function reverseLinkedList(head) {
+  let node = null;
+
+  while (head) {
+    // head.next를 임시로 temp라는 변수에 저장
+    let temp = head.next;
+
+    // node에 값을 채움
+    // 첫 루프에서 head.next는 null로 바꾸면서 linked list tail로 변경
+    // 그러곤 node를 head로 변경 이때, node.val -> 1, node.next -> null
+    // 두번째 루프에서 head.next는 node로 덮어씌우면서 { val: 1, next: null }를 가르키는 포인터로 변경
+    // node를 head로 변경, { val: 2, next: { val: 1, next: null} }로 변경
+    // 이런식으로 루프할때 마다 값을 역순으로 배치시킴
+    head.next = node;
+    node = head;
+
+    // 변수로 주어진 값은 앞으로 나아가야하기 때문에 임시저장한 값을 다시 복원
+    head = temp;
+  }
+
+  // 위 루프에서 쌓아뒀던 node를 리턴
+  return node;
+}
+```
+
+### 543. Diameter of Binary Tree
+
+#### description
+
+Given the root of a binary tree, return the length of the diameter of the tree.
+
+The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
+
+The length of a path between two nodes is represented by the number of edges between them.
+
+Example 1:
+
+Input: root = [1,2,3,4,5]
+Output: 3
+Explanation: 3 is the length of the path [4,2,1,3] or [5,2,1,3].
+Example 2:
+
+Input: root = [1,2]
+Output: 1
+
+Constraints:
+
+The number of nodes in the tree is in the range [1, 104].
+-100 <= Node.val <= 100
+
+#### solution
+
+1. 이 문제는 주어진 이진트리의 최대 지름을 구하는 문제이다.
+2. 최대 지름이란 리프 노드가 가로로 얼마나 펼쳐져 있는지를 의미한다.
+3. 최대 지름은 각 노드에서 하위 노드의 깊이의 합계에서 최대 값이다.
+4. 풀이는 dfs를 이용
+
+```js
+function diameterOfBinaryTree(root) {
+  let diameter = 0;
+
+  // dfs 함수는 이진트리 깊이를 구하는 함수를 활용
+  const getDiameter = (node) => {
+    if (!node) {
+      return 0;
+    }
+
+    const left = getDiameter(node.left);
+    const right = getDiameter(node.right);
+
+    // 깊이를 구하면서 각 노드에서 양 하위 노드의 깊이 값과 지름값을 비교해서 더 큰값으로 갱신 시켜준다.
+    diameter = Math.max(diameter, left + right);
+
+    return Math.max(left, right) + 1;
+  };
+
+  getDiameter(root);
+
+  return diameter;
+}
+```
