@@ -286,3 +286,89 @@ function diameterOfBinaryTree(root) {
   return diameter;
 }
 ```
+
+### 876. Middle of the Linked List
+
+#### description
+
+Given the head of a singly linked list, return the middle node of the linked list.
+
+If there are two middle nodes, return the second middle node.
+
+Example 1:
+
+Input: head = [1,2,3,4,5]
+Output: [3,4,5]
+Explanation: The middle node of the list is node 3.
+Example 2:
+
+Input: head = [1,2,3,4,5,6]
+Output: [4,5,6]
+Explanation: Since the list has two middle nodes with values 3 and 4, we return the second one.
+
+Constraints:
+
+The number of nodes in the list is in the range [1, 100].
+1 <= Node.val <= 100
+
+#### solution
+
+1. 이 문제는 원본 연결리스트를 복사해 하나는 한칸씩, 하나는 두칸씩 포인터를 옮겨준다.
+2. 그럼 두칸씩 이동한 값이 next가 없어지면, 남은 연결리스트는 원본 연결리스트의 절반만큼 이동한 셈이 된다.
+
+```js
+function middleOfLinkedList(head) {
+  let fast = head;
+  let slow = head;
+
+  while (fast.next) {
+    fast = fast.next.next;
+    slow = slow.next;
+  }
+
+  return slow;
+}
+```
+
+### 104. Maximum Depth of Binary Tree
+
+#### description
+
+Given the root of a binary tree, return its maximum depth.
+
+A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: 3
+Example 2:
+
+Input: root = [1,null,2]
+Output: 2
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 104].
+-100 <= Node.val <= 100
+
+#### solution
+
+1. 기존에 풀어봤던 dfs를 이용한 이진트리 풀이를 이용하면 간단하게 풀 수 있다.
+
+```js
+function maxDepthOfBT(root) {
+  const getDepth = (node) => {
+    if (!node) {
+      return 0;
+    }
+
+    let left = getDepth(node.left);
+    let right = getDepth(node.right);
+
+    return Math.max(left, right) + 1;
+  };
+
+  return getDepth(root);
+}
+```
