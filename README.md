@@ -8,8 +8,8 @@
 
 [트리](https://github.com/woongstaa/algorithms/blob/main/tree/tree.md)
 
-[리트코드 Grind 75 Week 1](https://github.com/woongstaa/algorithms/blob/main/grind75/week1.md)
+[Leet Code Grind 75 Week 1](https://github.com/woongstaa/algorithms/blob/main/grind75/week1.md)
 
-[리트코드 Grind 75 Week 2](https://github.com/woongstaa/algorithms/blob/main/grind75/week2.md)
+[Leet Code Grind 75 Week 2](https://github.com/woongstaa/algorithms/blob/main/grind75/week2.md)
 
-[리트코드 Grind 75 Week 3](https://github.com/woongstaa/algorithms/blob/main/grind75/week3.md)
+[Leet Code Grind 75 Week 3](https://github.com/woongstaa/algorithms/blob/main/grind75/week3.md)
