@@ -73,3 +73,94 @@ function insertInterval(intervals, newInterval) {
   return result;
 }
 ```
+
+### 542. 01 Matrix
+
+#### description
+
+Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
+
+The distance between two cells sharing a common edge is 1.
+
+Example 1:
+
+Input: mat = [[0,0,0],[0,1,0],[0,0,0]]
+Output: [[0,0,0],[0,1,0],[0,0,0]]
+Example 2:
+
+Input: mat = [[0,0,0],[0,1,0],[1,1,1]]
+Output: [[0,0,0],[0,1,0],[1,2,1]]
+
+Constraints:
+
+m == mat.length
+n == mat[i].length
+1 <= m, n <= 104
+1 <= m \* n <= 104
+mat[i][j] is either 0 or 1.
+There is at least one 0 in mat.
+
+#### solution
+
+1. 이 문제는 주어진 매트릭스의 각 지점에서 가장 가까운 0이 몇 칸내에 인접해있는지 묻는 문제
+2. 이런 최소범위 문제는 bfs로 풀어야한다
+3. 주어진 매트릭스에서 각 지점이 0이면 이미 0이기 때문에 정답도 0이 됨
+4. 그 외의 값은 Infinity로 최대값을 주어 탐색범위가 됐을 때, 비교를 통하여 최소값으로 계속 업데이트 시켜줌
+5. 이를 위해 큐를 활용 0인 좌표를 넣어 네 방향으로 탐색하여 최소값을 업데이트 시켜준다.
+
+```js
+function matrix(mat) {
+  const m = mat.length;
+  const n = mat[0].length;
+
+  // 결과 배열(result)을 무한대로 초기화.
+  // 이 배열은 각 칸까지 0으로부터의 최단 거리를 저장하는 역할을 함.
+  const result = Array.from({ length: m }, () => Array(n).fill(Infinity));
+  const queue = []; // BFS 탐색을 위한 큐
+
+  // 4방향(상, 하, 좌, 우) 이동을 위한 offset 배열
+  const directions = [
+    [0, 1], // 오른쪽
+    [0, -1], // 왼쪽
+    [-1, 0], // 위쪽
+    [1, 0] // 아래쪽
+  ];
+
+  // 원본 매트릭스(mat)에서 값이 0인 위치는 이미 0에 인접한 것이므로
+  // 결과 배열에 0으로 기록하고, 이 좌표들을 큐에 추가한다.
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (mat[i][j] === 0) {
+        result[i][j] = 0;
+        queue.push([i, j]);
+      }
+    }
+  }
+
+  // BFS 탐색: 큐에서 하나씩 좌표를 꺼내면서 인접한 칸들을 검사
+  while (queue.length) {
+    // 큐에서 현재 위치 [x, y]를 꺼낸다.
+    const [x, y] = queue.shift();
+
+    // 상하좌우 네 방향으로 이동하여 새로운 좌표를 계산한다.
+    for (const [dx, dy] of directions) {
+      const newX = x + dx;
+      const newY = y + dy;
+
+      // 새로운 좌표가 행렬 범위 내에 있는지 확인
+      if (newX >= 0 && newX < m && newY >= 0 && newY < n) {
+        // 현재 위치까지의 최단 거리(result[x][y])에 한 칸 이동한 거리 1을 더한 값과,
+        // 새 좌표의 기존 값(result[newX][newY])을 비교한다.
+        // 만약 result[newX][newY]가 더 크다면, 더 짧은 경로를 찾은 것이므로 업데이트 한다.
+        if (result[newX][newY] > result[x][y] + 1) {
+          result[newX][newY] = result[x][y] + 1;
+          // 업데이트된 좌표를 큐에 추가하여, 이 좌표를 기준으로 다시 탐색을 진행한다.
+          queue.push([newX, newY]);
+        }
+      }
+    }
+  }
+
+  return result;
+}
+```
