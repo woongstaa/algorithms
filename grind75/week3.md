@@ -164,3 +164,96 @@ function matrix(mat) {
   return result;
 }
 ```
+
+### 973. K Closest Points to Origin
+
+#### description
+
+Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).
+
+The distance between two points on the X-Y plane is the Euclidean distance (i.e., √(x1 - x2)2 + (y1 - y2)2).
+
+You may return the answer in any order. The answer is guaranteed to be unique (except for the order that it is in).
+
+Example 1:
+
+Input: points = [[1,3],[-2,2]], k = 1
+Output: [[-2,2]]
+Explanation:
+The distance between (1, 3) and the origin is sqrt(10).
+The distance between (-2, 2) and the origin is sqrt(8).
+Since sqrt(8) < sqrt(10), (-2, 2) is closer to the origin.
+We only want the closest k = 1 points from the origin, so the answer is just [[-2,2]].
+Example 2:
+
+Input: points = [[3,3],[5,-1],[-2,4]], k = 2
+Output: [[3,3],[-2,4]]
+Explanation: The answer [[-2,4],[3,3]] would also be accepted.
+
+Constraints:
+
+1 <= k <= points.length <= 104
+-104 <= xi, yi <= 104
+
+#### solution
+
+1. 이 문제는 주어진 좌표들이 원점(0, 0)으로 부터 유클리드 거리가 얼마나 되고, 그 중에 최소값을 k개 찾는 문제이다.
+2. 유클리드 거리란 원점부터 좌표까자의 x, y 값의 차이를 각각 제곱하여 더한 값이다.
+
+```js
+function kClosest(points, k) {
+  const result = [];
+  const powPoints = [];
+
+  // 유클리드 거리와 값의 인덱스를 기록해놓는다
+  for (let i = 0; i < points.length; i++) {
+    const [x, y] = points[i];
+    powPoints.push([x * x + y * y, i]);
+  }
+
+  // 유클리드 거리 기준으로 올림차순 정렬을 한다
+  const sorted = powPoints.sort((a, b) => a[0] - b[0]);
+
+  // k값 만큼 결과값에 원본 좌표를 푸시해준다
+  for (let i = 0; i < k; i++) {
+    result.push(points[sorted[i]]);
+  }
+
+  return result;
+}
+```
+
+### 3. Longest Substring Without Repeating Characters
+
+#### solution
+
+1. 이 문제는 연속된 스트링 중에 중복 없이 가장 긴 스트링의 길이를 구하는 문제
+2. 투포인터를 이용해 포인터를 동적으로 움직여 해결
+
+```js
+function lengthOfLongestSubstring(s) {
+  let start = 0; // 시작 포인터
+  let max = 0; // 가장 긴 스트링의 길이
+
+  const set = new Set(); // 중복을 피하기위해 Set자료구조 선택
+
+  // 끝 포인터를 반복문으로 돌려 한칸씩 이동시킴
+  for (let end = 0; end < s.length; end++) {
+    // 2. Set에 현재 s[end]와 같은 값이 있다면
+    // 2-2. 중복이 없을 때까지 계속 이 동작을 한다
+    while (set.has(s[end])) {
+      // 2-1. 포인터의 시작 지점부터 하나씩 지운다
+      set.delete(s[start]);
+      start++;
+    }
+
+    // 1. s[end]를 Set에 넣음
+    set.add(s[end]);
+
+    // 기존 값과 최신 값 중 더 큰 값으로 갱신한다
+    max = Math.max(max, end - start + 1);
+  }
+
+  return max;
+}
+```
