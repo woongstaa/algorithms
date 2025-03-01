@@ -257,3 +257,89 @@ function lengthOfLongestSubstring(s) {
   return max;
 }
 ```
+
+### 15. 3Sum
+
+#### description
+
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+
+Notice that the solution set must not contain duplicate triplets.
+
+Example 1:
+
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+Explanation:
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+The distinct triplets are [-1,0,1] and [-1,-1,2].
+Notice that the order of the output and the order of the triplets does not matter.
+Example 2:
+
+Input: nums = [0,1,1]
+Output: []
+Explanation: The only possible triplet does not sum up to 0.
+Example 3:
+
+Input: nums = [0,0,0]
+Output: [[0,0,0]]
+Explanation: The only possible triplet sums up to 0.
+
+Constraints:
+
+3 <= nums.length <= 3000
+-105 <= nums[i] <= 105
+
+#### solution
+
+1. 이 문제는 투포인터를 활용해 풀어야한다.
+2. 최초의 값을 고정시켜놓은 뒤 나머지의 범위를 앞뒤로 줄여가며 조건에 일치하는지 체크
+
+```js
+function sum(nums) {
+  // 숫자를 오름차순으로 정렬 (음수 -> 양수)
+  nums.sort((a, b) => a - b);
+
+  const result = [];
+
+  // 첫 포인터는 하나로 고정해서 아래 과정이 끝나면 다음으로 넘어가도록
+  for (let i = 0; i < nums.length; i++) {
+    // 이전 값이랑 지금 값이 똑같다면 중복된 계산을 피하기 위해 얼리리턴
+    if (i > 0 && nums[i] === nums[i - 1]) {
+      continue;
+    }
+
+    // 투포인터로 양 끝단을 잡음
+    let j = i + 1;
+    let k = nums.length - 1;
+
+    while (j < k) {
+      let sum = nums[i] + nums[j] + nums[k];
+
+      // 0이 되는 값을 찾아야하기 때문에
+      // 양수라면 뒤쪽 포인터를 한칸 내려야한다
+      if (sum > 0) {
+        k--;
+        // 음수라면 앞쪽 포인터를 한칸 올린다
+      } else if (sum < 0) {
+        j++;
+      } else {
+        // 0의 경우
+        // 결과값에 푸시
+        result.push([nums[i], nums[j], nums[k]]);
+        // 앞쪽 포인터를 올려 다음 루프로 넘어간다
+        j++;
+
+        // 앞쪽 포인터가 이전값과 같고,
+        // 뒤 포인터보다 값이 작다면 (음수 -> 양수로 정렬을 했기 때문에) 앞 포인터를 한 칸 올린다
+        // 만약 값이 크다면 이미 두 포인터가 마주쳤기 때문에 계산이 끝이 나야함
+        while (nums[j] === nums[j - 1] && j < k) {
+          j++;
+        }
+      }
+    }
+  }
+}
+```
