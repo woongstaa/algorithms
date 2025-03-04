@@ -343,3 +343,100 @@ function sum(nums) {
   }
 }
 ```
+
+### 102. Binary Tree Level Order Traversal
+
+#### description
+
+Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[9,20],[15,7]]
+Example 2:
+
+Input: root = [1]
+Output: [[1]]
+Example 3:
+
+Input: root = []
+Output: []
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 2000].
+-1000 <= Node.val <= 1000
+
+#### solution
+
+1. 이 문제는 이진트리를 각 depth별로 구분해 배열에 이중배열로 리턴하는 문제이다
+2. bfs를 활용하여 루트부터 각 뎁스의 값들을 큐에 넣어 그 값들을 결과값으로 푸시하여 해결한다.
+3. 기본 배열 매서드를 활용하기보다는 간단하게 큐 클래스를 만들어 푸는 것이 좋다.
+
+```js
+class CustomQueue {
+  front = 0;
+  rear = 0;
+  items = [];
+
+  constructor(item) {
+    this.items.push(item);
+    this.rear = 1;
+  }
+
+  push(item) {
+    this.rear += 1;
+    this.items.push(item);
+  }
+
+  pop() {
+    return this.items[this.front++];
+  }
+
+  size() {
+    return this.rear - this.front;
+  }
+
+  isEmpty() {
+    return this.front === this.rear;
+  }
+}
+
+function levelOrder(root) {
+  if (!root) return [];
+
+  const result = [];
+  const queue = new CustomQueue();
+
+  // while문으로 queue가 비워질떄까지
+  while (!queue.isEmpty()) {
+    // 현재 큐의 크기
+    // 1. 이 값은 아래 for문에서 큐가 채워지는데
+    // 2. 큐에서 pop한 현재 노드에서 하위 값이 있으면 큐에 푸시
+    // 3. 위 과정을 거친 큐의 크기이기 때문에 큐의 크기가 곧 하위 노드의 갯수를 의미한다.
+    const size = queue.size();
+    // 현재 이진트리의 깊이에 맞는 값들을 모아 놓을 배열
+    const depth = [];
+
+    for (let i = 0; i < size; i++) {
+      // 노드 갯수만큼 루프
+      const node = queue.pop();
+      depth.push(node.val); // 노드의 값을 푸시
+
+      // 하위 노드가 있으면 큐에 푸시
+      if (node.left) {
+        queue.push(node.left);
+      }
+
+      if (node.right) {
+        queue.push(node.right);
+      }
+    }
+    // 모아놓은 depth를 결과에 푸시
+    result.push(depth);
+  }
+
+  return result;
+}
+```
