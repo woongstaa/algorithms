@@ -440,3 +440,221 @@ function levelOrder(root) {
   return result;
 }
 ```
+
+### 133. Clone Graph
+
+#### description
+
+Given a reference of a node in a connected undirected graph.
+
+Return a deep copy (clone) of the graph.
+
+Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.
+
+class Node {
+public int val;
+public List<Node> neighbors;
+}
+
+Test case format:
+
+For simplicity, each node's value is the same as the node's index (1-indexed). For example, the first node with val == 1, the second node with val == 2, and so on. The graph is represented in the test case using an adjacency list.
+
+An adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a node in the graph.
+
+The given node will always be the first node with val = 1. You must return the copy of the given node as a reference to the cloned graph.
+
+Example 1:
+
+Input: adjList = [[2,4],[1,3],[2,4],[1,3]]
+Output: [[2,4],[1,3],[2,4],[1,3]]
+Explanation: There are 4 nodes in the graph.
+1st node (val = 1)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+2nd node (val = 2)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+3rd node (val = 3)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+4th node (val = 4)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+Example 2:
+
+Input: adjList = [[]]
+Output: [[]]
+Explanation: Note that the input contains one empty list. The graph consists of only one node with val = 1 and it does not have any neighbors.
+Example 3:
+
+Input: adjList = []
+Output: []
+Explanation: This an empty graph, it does not have any nodes.
+
+Constraints:
+
+The number of nodes in the graph is in the range [0, 100].
+1 <= Node.val <= 100
+Node.val is unique for each node.
+There are no repeated edges and no self-loops in the graph.
+The Graph is connected and all nodes can be visited starting from the given node.
+
+#### solution
+
+1. 이 문제는 Node로 구성된 순환 그래프를 복사해 리턴하는 문제이다.
+2. 풀이 방법으로는 해시테이블과 dfs 혹은 bfs를 이용하는 것이다.
+
+```js
+// DFS
+function cloneGraph(node) {
+  if (!node) return null;
+
+  // 방문한 그래프 노드를 저장하는 해시테이블
+  const visited = new Map(node);
+
+  function dfs(currNode) {
+    // 6. 만약 해시테이블에 이미 담긴 노드라면,
+    if (visited.has(currNode)) {
+      // 7. 그 값을 리턴하여 불필요한 복사 과정을 스킵한다.
+      return visited.get(currNode);
+    }
+    // 1. 복사할 노드를 생성해준다
+    const clone = new Node(currNode.val, []);
+    // 2. 복사한 노드를 해시테이블에 담아준다.
+    visited.set(currNode, clone);
+
+    // 3. 현재 파라미터로 받은 노드의 이웃값 만큼 반복문을 돌려준다.
+    for (const neighbor of currNode.neighbors) {
+      // 4. 복사할 값의 이웃 값들을 이 함수를 재귀호출하며 리턴한 값으로 업데이트한다.
+      clone.neighbors.push(dfs(neighbor));
+    }
+
+    // 5. 복사한 값을 리턴한다.
+    return clone;
+  }
+
+  return dfs(node);
+}
+
+// BFS (Queue 클래스는 있다고 가정)
+function cloneGraph(node) {
+  if (!node) return null;
+  // 1. 복사할 자료구조를 생성
+  const clone = new Map();
+  // 2. 큐를 생성하고 첫 노드를 큐에 채워준다
+  const queue = new CustomQueue(node);
+  // 3. 처음에 채운 큐의 값을 먼저 채워준다
+  clone.set(node, new Node(node.val, []));
+
+  while (!queue.isEmpty()) {
+    const currNode = queue.pop();
+    const currClonedNode = clone.get(currNode);
+
+    // 4. 원본 노드의 이웃 값을 순회
+    for (const neighbor of currNode.neighbors) {
+      // 5-1. 만약, 복사한 자료구조 속에 이웃값 노드가 존재하지 않는다면
+      if (!clone.get(neighbor)) {
+        // 5-1-1. 이웃값에 맞는 노드를 새로 생성해준다.
+        clone.set(neighbor, new Node(neighbor.val, []));
+        // 5-1-2. 이웃값 노드의 이웃값도 채워주어야하기 때문에 큐에 추가해준다.
+        queue.push(neighbor);
+      }
+      // 5-2. 현재 복사된 노드의 값에 이웃 노드값을 업데이트해준다.
+      currClonedNode.neighbors.push(clone.get(neighbor));
+    }
+  }
+
+  // 6. 복사한 노드를 조회한 값을 리턴해준다.
+  return clone.get(node);
+}
+```
+
+### 150. Evaluate Reverse Polish Notation
+
+#### description
+
+You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation.
+
+Evaluate the expression. Return an integer that represents the value of the expression.
+
+Note that:
+
+The valid operators are '+', '-', '\*', and '/'.
+Each operand may be an integer or another expression.
+The division between two integers always truncates toward zero.
+There will not be any division by zero.
+The input represents a valid arithmetic expression in a reverse polish notation.
+The answer and all the intermediate calculations can be represented in a 32-bit integer.
+
+Example 1:
+
+Input: tokens = ["2","1","+","3","*"]
+Output: 9
+Explanation: ((2 + 1) \* 3) = 9
+Example 2:
+
+Input: tokens = ["4","13","5","/","+"]
+Output: 6
+Explanation: (4 + (13 / 5)) = 6
+Example 3:
+
+Input: tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+Output: 22
+Explanation: ((10 _ (6 / ((9 + 3) _ -11))) + 17) + 5
+= ((10 _ (6 / (12 _ -11))) + 17) + 5
+= ((10 _ (6 / -132)) + 17) + 5
+= ((10 _ 0) + 17) + 5
+= (0 + 17) + 5
+= 17 + 5
+= 22
+
+Constraints:
+
+1 <= tokens.length <= 104
+tokens[i] is either an operator: "+", "-", "\*", or "/", or an integer in the range [-200, 200].
+
+#### solution
+
+1. Reverse Polish Notation은 후위표기법이라고 불리며, 연산자가 피연산자 뒤에 붙는 특징이 있다고한다.
+2. 피연산자들을 스택에 쌓고, 연산자 케이스일때 스택에서 꺼낸 두 값을 연산하는 방법을 이용하는 것이 핵심이다
+
+```js
+class Stack {
+  items = [];
+
+  push(item) {
+    this.items.push(item);
+  }
+  pop() {
+    return this.items.pop();
+  }
+  top() {
+    return this.items[this.items.length - 1];
+  }
+  size() {
+    return this.items.length;
+  }
+}
+
+function evalRPN(tokens) {
+  const stack = new Stack();
+
+  for (const token of tokens) {
+    // 연산자일 경우 계산 결과를 다시 스택에 쌓아준다.
+    if (token === '+' || token === '-' || token === '*' || token === '/') {
+      // 연산자가 오는 경우는 반드시 최소 스택에 2개의 피연산자 값이 있기 때문에 두 값을 팝해서 꺼내온다
+      const first = Number(stack.pop());
+      const seconde = Number(stack.pop());
+
+      if (token === '+') {
+        stack.push(second + first);
+      } else if (token === '-') {
+        stack.push(second - first);
+      } else if (token === '*') {
+        stack.push(second * first);
+      } else if (token === '/') {
+        // 나눗셈은 문제의 조건대로 정수단위로 잘라낸다.
+        stack.push(Math.trunc(second / first));
+      }
+    } else {
+      // 일반 숫자값이면 스택에 바로 쌓아준다
+      stack.push(token);
+    }
+  }
+
+  return stack.items[0];
+}
+```
