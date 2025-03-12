@@ -184,3 +184,66 @@ Trie.prototype.startsWith = function (prefix) {
   return true;
 };
 ```
+
+### 322. Coin Change
+
+You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+
+You may assume that you have an infinite number of each kind of coin.
+
+Example 1:
+
+Input: coins = [1,2,5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+Example 2:
+
+Input: coins = [2], amount = 3
+Output: -1
+Example 3:
+
+Input: coins = [1], amount = 0
+Output: 0
+
+Constraints:
+
+1 <= coins.length <= 12
+1 <= coins[i] <= 231 - 1
+0 <= amount <= 104
+
+#### solution
+
+1. 이 문제는 DP를 이용해서 풀이하는 것이 좋다
+2. 0부터 amount까지의 값들을 쌓아 올리면서 최소 코인 갯수를 쌓아올려 이전값을 활용해 계산하도록한다
+
+```js
+function coinChange(coins, amount) {
+  // dp[i]는 금액 i를 만들기 위해 필요한 최소 동전 수를 저장하는 배열입니다.
+  // 최대 동전 수는 amount보다 클 수 없으므로, 초기값으로 amount+1 (실제 가능한 최대값보다 큰 값)을 사용합니다.
+  const dp = new Array(amount + 1).fill(amount + 1);
+
+  // 금액 0을 만드는 데는 동전이 필요 없으므로 dp[0]은 0입니다.
+  dp[0] = 0;
+
+  // 금액 1부터 amount까지 차례로 최소 동전 수를 계산합니다.
+  for (let i = 1; i <= amount; i++) {
+    // 각 동전 coin을 사용해 현재 금액 i를 만들 수 있는지 확인합니다.
+    for (let j = 0; j < coins.length; j++) {
+      // 동전 coin을 사용할 수 있으려면, 현재 금액 i가 coin보다 크거나 같아야 합니다.
+      if (i - coins[j] >= 0) {
+        // 만약 동전 coin을 사용한다면, 남은 금액은 i - coins[j]가 됩니다.
+        // 이미 dp[i - coins[j]]에는 금액 i - coins[j]를 만드는 데 필요한 최소 동전 수가 계산되어 있습니다.
+        // 여기에 동전 coin 하나를 추가하면, 금액 i를 만드는 데 필요한 동전 수는 dp[i - coins[j]] + 1이 됩니다.
+        // 이 값과 현재 dp[i] 값을 비교하여 더 작은 값으로 업데이트합니다.
+        dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+      }
+    }
+  }
+
+  // dp[amount]가 초기값(amount+1)과 같다면, 금액 amount를 만들 수 있는 조합이 없음을 의미하므로 -1을 반환합니다.
+  // 그렇지 않으면 dp[amount]를 반환합니다.
+  return dp[amount] !== amount + 1 ? dp[amount] : -1;
+}
+```
