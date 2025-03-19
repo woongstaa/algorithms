@@ -346,3 +346,105 @@ MinStack.prototype.getMin = function () {
  * var param_4 = obj.getMin()
  */
 ```
+
+### 238. Product of Array Except Self
+
+Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+
+The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+
+You must write an algorithm that runs in O(n) time and without using the division operation.
+
+Example 1:
+
+Input: nums = [1,2,3,4]
+Output: [24,12,8,6]
+Example 2:
+
+Input: nums = [-1,1,0,-3,3]
+Output: [0,0,9,0,0]
+
+Constraints:
+
+2 <= nums.length <= 105
+-30 <= nums[i] <= 30
+The input is generated such that answer[i] is guaranteed to fit in a 32-bit integer.
+
+Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
+
+#### solution
+
+1. 이 문제는 자기 자신을 제외한 배열의 값들의 곱들을 결과물로 리턴해야하는 문제
+2. 이 문제의 풀이는 주어진 배열 길이와 같은 1로 채운 배열을 생성한 뒤에
+3. 왼쪽에서 한칸씩 이동하면서 그 값을 곱해가며 한칸씩 이동해주고
+4. 오른쪽에서도 마찬가지로 한칸씩 이동하면서 값을 곱해가면서 한칸씩 이동해주면
+5. 자기 자신을 제외한 모든 값들을 곱한 것과 결과값이 같아진다.
+
+```js
+function productExceptSelf(nums) {
+  const result = new Array(nums.length).fill(1);
+
+  let left = 1;
+  for (let i = 0; i < nums.length; i++) {
+    result[i] *= left;
+    left *= nums[i];
+  }
+
+  let right = 1;
+  for (let i = nums.length - 1; i >= 0; i--) {
+    result[i] *= right;
+    right *= nums[i];
+  }
+
+  return result;
+}
+```
+
+### 98. Validate Binary Search Tree
+
+Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+
+A valid BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+
+Example 1:
+
+Input: root = [2,1,3]
+Output: true
+Example 2:
+
+Input: root = [5,1,4,null,null,3,6]
+Output: false
+Explanation: The root node's value is 5 but its right child's value is 4.
+
+Constraints:
+
+The number of nodes in the tree is in the range [1, 104].
+-231 <= Node.val <= 231 - 1
+
+#### solution
+
+1. 주어진 이진트리 구조에서 하위 값들이 올바르게 되어있는지 체크하는 문제
+2. dfs를 이용해 존재하는 트리들을 재귀로 조건들을 체크하여 풀이
+
+```js
+function isValidBST(root) {
+  const dfs = (node, lower, upper) => {
+    // 노드가 없어도 유효한 BST로 간주
+    if (!node) return true;
+
+    // 노드의 값이 설정한 범위 바깥이면 false 리턴
+    if (node.val <= lower || node.val >= upper) {
+      return false;
+    }
+    // 왼쪽 하위노드와 오른쪽 하위노드를 재귀적으로 호출
+    return dfs(node.left, lower, node.val) && dfs(node.right, node.val, upper);
+  };
+
+  // 첫 범위는 음의 무한대와 양의 무한대 값을 활용
+  return dfs(root, -Infinity, Infinity);
+}
+```
