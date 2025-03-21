@@ -448,3 +448,194 @@ function isValidBST(root) {
   return dfs(root, -Infinity, Infinity);
 }
 ```
+
+### 200. Number of Islands
+
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+Example 1:
+
+Input: grid = [
+["1","1","1","1","0"],
+["1","1","0","1","0"],
+["1","1","0","0","0"],
+["0","0","0","0","0"]
+]
+Output: 1
+Example 2:
+
+Input: grid = [
+["1","1","0","0","0"],
+["1","1","0","0","0"],
+["0","0","1","0","0"],
+["0","0","0","1","1"]
+]
+Output: 3
+
+Constraints:
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 300
+grid[i][j] is '0' or '1'.
+
+#### solution
+
+1. 이 문제는 2 \* 2 매트릭스 배열이 주어지는데, 1이면 육지 0이면 바다로 판단하고 1이 인접해있으면 하나의 육지로 판단해 주어진 매트릭스에서 육지의 갯수가 총 몇 개 인지 찾는 문제이다
+2. bfs를 이용해 육지를 탐색하고, 그 값들을 0으로 바꿔주면서 큐에 새롭게 추가하면서 인접 값들을 모두 0으로 바꿔, 새로운 1을 찾아 이 과정을 반복한다.
+
+```js
+function numIslands(grid) {
+  // 주어진 그리드의 가로, 세로 길이
+  const m = grid.length;
+  const n = grid[0].length;
+  // 기준 좌표의 인접한 네 방향의 값을 탐지하기 위한
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+    [1, 0]
+  ];
+  // 총 섬의 갯수
+  let island = 0;
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      // 주어진 2*2 매트릭스를 하나씩 탐색
+
+      if (grid[i][j] === '1') {
+        // 탐색한 값이 '1'이면 육지라는 의미
+        island++; // 카운트를 올려줌
+        grid[i][j] = '0'; // 중복 계산을 피하기 위해 값을 0으로 변경해줌
+
+        const queue = [[i, j]]; // 큐에 추가하여 이 좌표의 인접 값들이 육지인지 판단
+
+        while (queue.length) {
+          const [x, y] = queue.shift();
+
+          for (const [dx, dy] of directions) {
+            const nx = x + dx;
+            const ny = y + dy;
+
+            // 네 방향으로 이동할 값들이 범위 이내인지 체크한 뒤
+            // 큐에 추가할 트리거 조건으로 네 방향의 값들이 '1' 인지 체크
+            if (nx > -1 && nx < m && ny > -1 && ny < n && grid[nx][ny] === '1') {
+              grid[nx][ny] = '0';
+              queue.push([nx, ny]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return island;
+}
+```
+
+### 994. Rotting Oranges
+
+You are given an m x n grid where each cell can have one of three values:
+
+0 representing an empty cell,
+1 representing a fresh orange, or
+2 representing a rotten orange.
+Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten.
+
+Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return -1.
+
+Example 1:
+
+Input: grid = [[2,1,1],[1,1,0],[0,1,1]]
+Output: 4
+Example 2:
+
+Input: grid = [[2,1,1],[0,1,1],[1,0,1]]
+Output: -1
+Explanation: The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally.
+Example 3:
+
+Input: grid = [[0,2]]
+Output: 0
+Explanation: Since there are already no fresh oranges at minute 0, the answer is just 0.
+
+Constraints:
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 10
+grid[i][j] is 0, 1, or 2.
+
+#### solution
+
+1. 이 문제는 BFS로 풀이한다
+   1. 우선 큐에 썩은 과일의 좌표를 집어 넣고
+   2. 큐에 있는 값들을 꺼내 인접한 좌표에 과일이 있으면 썩게 값을 변경
+   3. 그리곤 큐에 다시 썩은 과일의 좌표를 추가해줌
+   4. 위 과정을 한 턴이라고 규정하고 위 과정이 일어나면 하나씩 값을 올려줌
+
+```js
+function orangeRotting(grid) {
+  const m = grid.length;
+  const n = grid[0].length;
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+    [1, 0]
+  ];
+
+  let turns = 0;
+  const queue = [];
+
+  // 먼저 썩은 오렌지를 큐에 넣어준다.
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 2) {
+        queue.push([i, j]);
+      }
+    }
+  }
+
+  while (queue.length) {
+    let size = queue.length; // 현재 단계에서 처리할 노드 수
+    const temp = [];
+
+    for (let i = 0; i < size; i++) {
+      const [qx, qy] = queue.shift();
+
+      for (const [dx, dy] of directions) {
+        const nx = qx + dx;
+        const ny = qy + dy;
+
+        // 큐에 들어간것은 이미 썩은 과일
+        // 인접한 값이 1이라는건 과일이 있다는 의미
+        if (nx >= 0 && nx < m && ny >= 0 && ny < n && grid[nx][ny] === 1) {
+          grid[nx][ny] = 2;
+          temp.push([nx, ny]);
+        }
+      }
+    }
+
+    // 임시 배열이 차있다면 큐에 채워줌
+    if (temp.length) {
+      // 큐가 한번 싹 비워질때마다 한 턴씩 진행됐다는 의미
+      turns++;
+      queue.push(...temp);
+    }
+  }
+
+  // 위 과정 후에 1이 아직 있으면 모두 썩지 않았기 때문에 -1 리턴
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        return -1;
+      }
+    }
+  }
+
+  return turns;
+}
+```
