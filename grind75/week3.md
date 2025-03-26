@@ -1,8 +1,8 @@
 ## Week 3
 
-### Insert Interval
+## Insert Interval
 
-#### description
+### description
 
 You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
 
@@ -31,7 +31,7 @@ intervals is sorted by starti in ascending order.
 newInterval.length == 2
 0 <= start <= end <= 105
 
-#### solution
+### solution
 
 1. 이 문제는 intervals라는 간격이 기록되어있는 배열 속에서, newInterval배열을 병합시키는 작업이 필요하다.
 2. 반복문을 돌리면서 원하는 순서에 newInterval배열을 병합시켜야하므로 while문을 사용하도록한다.
@@ -74,9 +74,9 @@ function insertInterval(intervals, newInterval) {
 }
 ```
 
-### 542. 01 Matrix
+## 542. 01 Matrix
 
-#### description
+### description
 
 Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
 
@@ -100,7 +100,7 @@ n == mat[i].length
 mat[i][j] is either 0 or 1.
 There is at least one 0 in mat.
 
-#### solution
+### solution
 
 1. 이 문제는 주어진 매트릭스의 각 지점에서 가장 가까운 0이 몇 칸내에 인접해있는지 묻는 문제
 2. 이런 최소범위 문제는 bfs로 풀어야한다
@@ -165,9 +165,9 @@ function matrix(mat) {
 }
 ```
 
-### 973. K Closest Points to Origin
+## 973. K Closest Points to Origin
 
-#### description
+### description
 
 Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).
 
@@ -195,7 +195,7 @@ Constraints:
 1 <= k <= points.length <= 104
 -104 <= xi, yi <= 104
 
-#### solution
+### solution
 
 1. 이 문제는 주어진 좌표들이 원점(0, 0)으로 부터 유클리드 거리가 얼마나 되고, 그 중에 최소값을 k개 찾는 문제이다.
 2. 유클리드 거리란 원점부터 좌표까자의 x, y 값의 차이를 각각 제곱하여 더한 값이다.
@@ -223,9 +223,9 @@ function kClosest(points, k) {
 }
 ```
 
-### 3. Longest Substring Without Repeating Characters
+## 3. Longest Substring Without Repeating Characters
 
-#### solution
+### solution
 
 1. 이 문제는 연속된 스트링 중에 중복 없이 가장 긴 스트링의 길이를 구하는 문제
 2. 투포인터를 이용해 포인터를 동적으로 움직여 해결
@@ -258,9 +258,9 @@ function lengthOfLongestSubstring(s) {
 }
 ```
 
-### 15. 3Sum
+## 15. 3Sum
 
-#### description
+### description
 
 Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
 
@@ -292,7 +292,7 @@ Constraints:
 3 <= nums.length <= 3000
 -105 <= nums[i] <= 105
 
-#### solution
+### solution
 
 1. 이 문제는 투포인터를 활용해 풀어야한다.
 2. 최초의 값을 고정시켜놓은 뒤 나머지의 범위를 앞뒤로 줄여가며 조건에 일치하는지 체크
@@ -344,9 +344,9 @@ function sum(nums) {
 }
 ```
 
-### 102. Binary Tree Level Order Traversal
+## 102. Binary Tree Level Order Traversal
 
-#### description
+### description
 
 Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
 
@@ -368,7 +368,7 @@ Constraints:
 The number of nodes in the tree is in the range [0, 2000].
 -1000 <= Node.val <= 1000
 
-#### solution
+### solution
 
 1. 이 문제는 이진트리를 각 depth별로 구분해 배열에 이중배열로 리턴하는 문제이다
 2. bfs를 활용하여 루트부터 각 뎁스의 값들을 큐에 넣어 그 값들을 결과값으로 푸시하여 해결한다.
@@ -441,9 +441,9 @@ function levelOrder(root) {
 }
 ```
 
-### 133. Clone Graph
+## 133. Clone Graph
 
-#### description
+### description
 
 Given a reference of a node in a connected undirected graph.
 
@@ -492,7 +492,7 @@ Node.val is unique for each node.
 There are no repeated edges and no self-loops in the graph.
 The Graph is connected and all nodes can be visited starting from the given node.
 
-#### solution
+### solution
 
 1. 이 문제는 Node로 구성된 순환 그래프를 복사해 리턴하는 문제이다.
 2. 풀이 방법으로는 해시테이블과 dfs 혹은 bfs를 이용하는 것이다.
@@ -562,9 +562,9 @@ function cloneGraph(node) {
 }
 ```
 
-### 150. Evaluate Reverse Polish Notation
+## 150. Evaluate Reverse Polish Notation
 
-#### description
+### description
 
 You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation.
 
@@ -606,7 +606,7 @@ Constraints:
 1 <= tokens.length <= 104
 tokens[i] is either an operator: "+", "-", "\*", or "/", or an integer in the range [-200, 200].
 
-#### solution
+### solution
 
 1. Reverse Polish Notation은 후위표기법이라고 불리며, 연산자가 피연산자 뒤에 붙는 특징이 있다고한다.
 2. 피연산자들을 스택에 쌓고, 연산자 케이스일때 스택에서 꺼낸 두 값을 연산하는 방법을 이용하는 것이 핵심이다

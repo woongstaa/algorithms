@@ -1,4 +1,4 @@
-### 33. Search in Rotated Sorted Array
+## 33. Search in Rotated Sorted Array
 
 There is an integer array nums sorted in ascending order (with distinct values).
 
@@ -29,7 +29,7 @@ All values of nums are unique.
 nums is an ascending array that is possibly rotated.
 -104 <= target <= 104
 
-#### solution
+### solution
 
 1. 이 문제는 정렬된 배열이 특정구간에 틀어져있는 배열이 주어지며, 타겟의 인덱스를 찾아 리턴하는 문제
 2. 이진탐색을 이용해 구현
@@ -68,7 +68,7 @@ function search(nums, target) {
 }
 ```
 
-### 39. Combination Sum
+## 39. Combination Sum
 
 Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
 
@@ -100,7 +100,7 @@ Constraints:
 All elements of candidates are distinct.
 1 <= target <= 40
 
-#### solution
+### solution
 
 1. 이 문제는 트리구조처럼 하나씩 노드를 타고 내려가 조건에 맞는 값들을 찾고
 2. 조건에 맞지 않으면 백트래킹 방법을 이용헤 직전 노드를 변경하여 기준에 맞는 값을 찾는 문제이다.
@@ -142,7 +142,7 @@ function combinationSum(candidates, target) {
 }
 ```
 
-### 46. Permutations
+## 46. Permutations
 
 Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
 
@@ -165,7 +165,7 @@ Constraints:
 -10 <= nums[i] <= 10
 All the integers of nums are unique.
 
-#### solution
+### solution
 
 1. 이 문제 역시 백트래킹을 이용해 순열을 구현하는 문제
 2. 핵심은 노드의 사용여부 체크
@@ -208,7 +208,7 @@ function permute(nums) {
 }
 ```
 
-### 56. Merge Intervals
+## 56. Merge Intervals
 
 Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 
@@ -229,7 +229,7 @@ Constraints:
 intervals[i].length == 2
 0 <= starti <= endi <= 104
 
-#### solution
+### solution
 
 1. 이 문제는 이전 값과 다음 값이 겹치는 영역이 있으면 병합하는 문제이다.
 2. 스택을 활용해 top을 다음 값과 비교하여 병합하도록 로직을 구성한다.
@@ -261,7 +261,7 @@ function merge(interval) {
 }
 ```
 
-### 236. Lowest Common Ancestor of a Binary Tree
+## 236. Lowest Common Ancestor of a Binary Tree
 
 Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
 
@@ -290,7 +290,7 @@ All Node.val are unique.
 p != q
 p and q will exist in the tree.
 
-#### solution
+### solution
 
 1. 이진 트리 구조에서 공통된 최소 트리 노드를 찾는 문제
 2. 최소한의 트리를 찾는거기 때문에 p, q 둘 중 하나만 맞아도 우리가 원하는 값을 구할 수 있다.
@@ -318,7 +318,7 @@ function lowestCommonAncestor(root, p, q) {
 }
 ```
 
-### 981. Time Based Key-Value Store
+## 981. Time Based Key-Value Store
 
 Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key's value at a certain timestamp.
 
@@ -353,7 +353,7 @@ key and value consist of lowercase English letters and digits.
 All the timestamps timestamp of set are strictly increasing.
 At most 2 \* 105 calls will be made to set and get.
 
-#### solution
+### solution
 
 1. 타임 스탬프가 있는 Map 자료구조를 만드는 문제
 2. set(), get() 메서드를 만들어야함

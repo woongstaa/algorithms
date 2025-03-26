@@ -1,8 +1,8 @@
 ## Week 2
 
-### 278. First Bad Version
+## 278. First Bad Version
 
-#### description
+### description
 
 You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
 
@@ -28,7 +28,7 @@ Constraints:
 
 1 <= bad <= n <= 231 - 1
 
-#### solution
+### solution
 
 1. 이 문제는 처음에 이해하는 것이 어려웠는데, n의 값이 주어지고, isBadVersion이라는 함수가 주어지는데 n의 값이 잘못된 버전이라도 최초의 잘못된 버전이라는 보장이 없기 때문에 최초의 값을 찾아야 한다
 2. 그리하여 그 값을 찾으려면 이진탐색을 이용해 찾아야한다.
@@ -60,9 +60,9 @@ function firstBadVersion(isBadVersion) {
 }
 ```
 
-### 70. Climbing Stairs
+## 70. Climbing Stairs
 
-#### description
+### description
 
 You are climbing a staircase. It takes n steps to reach the top.
 
@@ -90,7 +90,7 @@ Constraints:
 
 1 <= n <= 45
 
-#### solution
+### solution
 
 1. 피보나치 수열을 구현하는 문제
 2. 이런 최적의 값, 경우의 수를 물어보는 문제는 DP를 이용해야한다
@@ -120,9 +120,9 @@ function climbingStairs(n) {
 }
 ```
 
-### 409. Longest Palindrome
+## 409. Longest Palindrome
 
-#### description
+### description
 
 Given a string s which consists of lowercase or uppercase letters, return the length of the longest
 palindrome
@@ -146,7 +146,7 @@ Constraints:
 1 <= s.length <= 2000
 s consists of lowercase and/or uppercase English letters only.
 
-#### solution
+### solution
 
 1. 이 문제는 주어진 스트링 s에서 좌우대칭이 되는 문자열의 최대길이가 얼마인가를 구하는 문제이다
 2. 우선 해시테이블을 이용해 각각의 키워드가 몇개 있는지 파악
@@ -172,9 +172,9 @@ function longestPalindrome(s) {
 }
 ```
 
-### 206. Reverse Linked List
+## 206. Reverse Linked List
 
-#### description
+### description
 
 Given the head of a singly linked list, reverse the list, and return the reversed list.
 
@@ -198,7 +198,7 @@ The number of nodes in the list is the range [0, 5000].
 
 Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
 
-#### solution
+### solution
 
 1. 이 문제는 주어진 링크드 리스트를 뒤집는 문제이다
 2. 변수로 주어진 링크드리스트는 next를 통해 앞으로 진행하면서, 정답에다가 역순으로 담는다
@@ -230,9 +230,9 @@ function reverseLinkedList(head) {
 }
 ```
 
-### 543. Diameter of Binary Tree
+## 543. Diameter of Binary Tree
 
-#### description
+### description
 
 Given the root of a binary tree, return the length of the diameter of the tree.
 
@@ -255,7 +255,7 @@ Constraints:
 The number of nodes in the tree is in the range [1, 104].
 -100 <= Node.val <= 100
 
-#### solution
+### solution
 
 1. 이 문제는 주어진 이진트리의 최대 지름을 구하는 문제이다.
 2. 최대 지름이란 리프 노드가 가로로 얼마나 펼쳐져 있는지를 의미한다.
@@ -287,9 +287,9 @@ function diameterOfBinaryTree(root) {
 }
 ```
 
-### 876. Middle of the Linked List
+## 876. Middle of the Linked List
 
-#### description
+### description
 
 Given the head of a singly linked list, return the middle node of the linked list.
 
@@ -311,7 +311,7 @@ Constraints:
 The number of nodes in the list is in the range [1, 100].
 1 <= Node.val <= 100
 
-#### solution
+### solution
 
 1. 이 문제는 원본 연결리스트를 복사해 하나는 한칸씩, 하나는 두칸씩 포인터를 옮겨준다.
 2. 그럼 두칸씩 이동한 값이 next가 없어지면, 남은 연결리스트는 원본 연결리스트의 절반만큼 이동한 셈이 된다.
@@ -330,9 +330,9 @@ function middleOfLinkedList(head) {
 }
 ```
 
-### 104. Maximum Depth of Binary Tree
+## 104. Maximum Depth of Binary Tree
 
-#### description
+### description
 
 Given the root of a binary tree, return its maximum depth.
 
@@ -352,7 +352,7 @@ Constraints:
 The number of nodes in the tree is in the range [0, 104].
 -100 <= Node.val <= 100
 
-#### solution
+### solution
 
 1. 기존에 풀어봤던 dfs를 이용한 이진트리 풀이를 이용하면 간단하게 풀 수 있다.
 

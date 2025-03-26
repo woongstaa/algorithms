@@ -1,6 +1,6 @@
 ## Week 4
 
-### 207. Course Schedule
+## 207. Course Schedule
 
 There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
 
@@ -28,7 +28,7 @@ prerequisites[i].length == 2
 0 <= ai, bi < numCourses
 All the pairs prerequisites[i] are unique.
 
-#### solution
+### solution
 
 1. 이 문제는 위상정렬이라는것을 이용해 풀어야한다.
 2. 위상정렬은 순서가 정해져있는 작업을 차례로 수행해야할때 그 순서를 결정하기 위해 사용하는 기법
@@ -80,7 +80,7 @@ function canFinish(numCourses, prerequisites) {
 }
 ```
 
-### 208. Implement Trie (Prefix Tree)
+## 208. Implement Trie (Prefix Tree)
 
 A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
 
@@ -114,7 +114,7 @@ Constraints:
 word and prefix consist only of lowercase English letters.
 At most 3 \* 104 calls in total will be made to insert, search, and startsWith.
 
-#### solution
+### solution
 
 1. 이 문제는 트라이라고 부르는 스트링을 키워드 단위로 아래로 내려가 트리구조 노드를 구현하는 문제다
 2. 인스턴스를 생성하고, insert, search, startsWith 메서드들을 구현하는 것이 목표이다.
@@ -185,7 +185,7 @@ Trie.prototype.startsWith = function (prefix) {
 };
 ```
 
-### 322. Coin Change
+## 322. Coin Change
 
 You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
 
@@ -213,7 +213,7 @@ Constraints:
 1 <= coins[i] <= 231 - 1
 0 <= amount <= 104
 
-#### solution
+### solution
 
 1. 이 문제는 DP를 이용해서 풀이하는 것이 좋다
 2. 0부터 amount까지의 값들을 쌓아 올리면서 최소 코인 갯수를 쌓아올려 이전값을 활용해 계산하도록한다
@@ -248,7 +248,7 @@ function coinChange(coins, amount) {
 }
 ```
 
-### 155. Min Stack
+## 155. Min Stack
 
 Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
 
@@ -286,7 +286,7 @@ Constraints:
 Methods pop, top and getMin operations will always be called on non-empty stacks.
 At most 3 \* 104 calls will be made to push, pop, top, and getMin.
 
-#### solution
+### solution
 
 1. 스택 자료구조를 구현하는 문제
 2. 기존 스택과의 차이점은 최소값도 필요하다는 것
@@ -347,7 +347,7 @@ MinStack.prototype.getMin = function () {
  */
 ```
 
-### 238. Product of Array Except Self
+## 238. Product of Array Except Self
 
 Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
 
@@ -372,7 +372,7 @@ The input is generated such that answer[i] is guaranteed to fit in a 32-bit inte
 
 Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
 
-#### solution
+### solution
 
 1. 이 문제는 자기 자신을 제외한 배열의 값들의 곱들을 결과물로 리턴해야하는 문제
 2. 이 문제의 풀이는 주어진 배열 길이와 같은 1로 채운 배열을 생성한 뒤에
@@ -400,7 +400,7 @@ function productExceptSelf(nums) {
 }
 ```
 
-### 98. Validate Binary Search Tree
+## 98. Validate Binary Search Tree
 
 Given the root of a binary tree, determine if it is a valid binary search tree (BST).
 
@@ -425,7 +425,7 @@ Constraints:
 The number of nodes in the tree is in the range [1, 104].
 -231 <= Node.val <= 231 - 1
 
-#### solution
+### solution
 
 1. 주어진 이진트리 구조에서 하위 값들이 올바르게 되어있는지 체크하는 문제
 2. dfs를 이용해 존재하는 트리들을 재귀로 조건들을 체크하여 풀이
@@ -449,7 +449,7 @@ function isValidBST(root) {
 }
 ```
 
-### 200. Number of Islands
+## 200. Number of Islands
 
 Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
 
@@ -481,7 +481,7 @@ n == grid[i].length
 1 <= m, n <= 300
 grid[i][j] is '0' or '1'.
 
-#### solution
+### solution
 
 1. 이 문제는 2 \* 2 매트릭스 배열이 주어지는데, 1이면 육지 0이면 바다로 판단하고 1이 인접해있으면 하나의 육지로 판단해 주어진 매트릭스에서 육지의 갯수가 총 몇 개 인지 찾는 문제이다
 2. bfs를 이용해 육지를 탐색하고, 그 값들을 0으로 바꿔주면서 큐에 새롭게 추가하면서 인접 값들을 모두 0으로 바꿔, 새로운 1을 찾아 이 과정을 반복한다.
@@ -535,7 +535,7 @@ function numIslands(grid) {
 }
 ```
 
-### 994. Rotting Oranges
+## 994. Rotting Oranges
 
 You are given an m x n grid where each cell can have one of three values:
 
@@ -568,7 +568,7 @@ n == grid[i].length
 1 <= m, n <= 10
 grid[i][j] is 0, 1, or 2.
 
-#### solution
+### solution
 
 1. 이 문제는 BFS로 풀이한다
    1. 우선 큐에 썩은 과일의 좌표를 집어 넣고

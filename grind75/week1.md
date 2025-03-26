@@ -1,8 +1,8 @@
 ## week 1
 
-### 733. Flood fill
+## 733. Flood fill
 
-#### description
+### description
 
 You are given an image represented by an m x n grid of integers image, where image[i][j] represents the pixel value of the image. You are also given three integers sr, sc, and color. Your task is to perform a flood fill on the image starting from the pixel image[sr][sc].
 
@@ -45,7 +45,7 @@ n == image[i].length
 0 <= sr < m
 0 <= sc < n
 
-#### solution
+### solution
 
 1. 이 문제는 image[sr][sc]에 존재하는 값이 color로 값이 바뀌는 과정을 계산
 2. 만약 바뀌게 된다면
@@ -100,9 +100,9 @@ function floodFill(image, sr, sc, color) {
 }
 ```
 
-### 235. Lowest Common Ancestor of a Binary Search Tree
+## 235. Lowest Common Ancestor of a Binary Search Tree
 
-#### description
+### description
 
 According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
 
@@ -129,7 +129,7 @@ All Node.val are unique.
 p != q
 p and q will exist in the BST.
 
-#### solution
+### solution
 
 1. 이 문제는 이진탐색트리 자료구조를 활용한 문제
 2. root, p, q 모두 트리노드 자료구조를 가지고 있음.
@@ -152,9 +152,9 @@ function lowestCommonAncestor(root, p, q) {
 }
 ```
 
-### 1. Two sum
+## 1. Two sum
 
-#### description
+### description
 
 Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
 
@@ -185,7 +185,7 @@ Only one valid answer exists.
 
 Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
 
-#### solution
+### solution
 
 1. 주어진 배열 내부의 값 중에서 두 값을 더했을 때 target과 일치하는 값의 index를 배열로 리턴하는 문제이다.
 2. 이 문제는 결국 우리가 원하는 값은 nums[x] + nums[y] === target 일때 두 값의 인덱스
@@ -210,9 +210,9 @@ function twoSum(nums, target) {
 }
 ```
 
-### 20. Valid Parentheses
+## 20. Valid Parentheses
 
-#### description
+### description
 
 Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 
@@ -251,7 +251,7 @@ Constraints:
 1 <= s.length <= 104
 s consists of parentheses only '()[]{}'.
 
-#### solution
+### solution
 
 1. 괄호가 열고 닫힘이 제대로 이루어져있는지 체크하는 문제
 2. 스택 자료구조를 활용해 열린 괄호들을 스택에 쌓고,
@@ -308,9 +308,9 @@ function validParentheses(s) {
 }
 ```
 
-### 141. Linked List Cycle
+## 141. Linked List Cycle
 
-#### description
+### description
 
 Given head, the head of a linked list, determine if the linked list has a cycle in it.
 
@@ -342,7 +342,7 @@ pos is -1 or a valid index in the linked-list.
 
 Follow up: Can you solve it using O(1) (i.e. constant) memory?
 
-#### solution
+### solution
 
 1. 링크드 리스트를 활용한 문제
 2. 투포인터를 이용해 푸는 것이 최선의 방법
@@ -369,9 +369,9 @@ function linkedListCycle(head) {
 }
 ```
 
-### 110. Balanced Binary Tree
+## 110. Balanced Binary Tree
 
-#### description
+### description
 
 Given a binary tree, determine if it is
 height-balanced
@@ -395,7 +395,7 @@ Constraints:
 The number of nodes in the tree is in the range [0, 5000].
 -104 <= Node.val <= 104
 
-#### solution
+### solution
 
 1. 높이가 균형이 잡혔다는 의미는 양쪽 노드의 깊이 차이가 1이내인 것을 의미한다.
 2. dfs를 이용해 풀이한다.
