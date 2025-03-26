@@ -260,3 +260,147 @@ function merge(interval) {
   return result;
 }
 ```
+
+### 236. Lowest Common Ancestor of a Binary Tree
+
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
+
+Example 1:
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of nodes 5 and 1 is 3.
+Example 2:
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+Example 3:
+
+Input: root = [1,2], p = 1, q = 2
+Output: 1
+
+Constraints:
+
+The number of nodes in the tree is in the range [2, 105].
+-109 <= Node.val <= 109
+All Node.val are unique.
+p != q
+p and q will exist in the tree.
+
+#### solution
+
+1. 이진 트리 구조에서 공통된 최소 트리 노드를 찾는 문제
+2. 최소한의 트리를 찾는거기 때문에 p, q 둘 중 하나만 맞아도 우리가 원하는 값을 구할 수 있다.
+3. dfs를 이용해 원하는 값이 있는지 찾자
+
+```js
+function lowestCommonAncestor(root, p, q) {
+  // 노드가 비었거나, p 혹은 q와 같다면 노드를 리턴
+  if (!root || root === p || root === q) {
+    return root;
+  }
+
+  // 양 하위 노드를 재귀로 선언
+  const left = lowestCommonAncestor(root.left, p, q);
+  const right = lowestCommonAncestor(root.right, p, q);
+
+  // 양 하위 노드들이 p혹은 q와 일치하는 노드라면
+  if (left && right) {
+    // 지금 상위노드가 최소 공통 트리노드기 때문에 이 노드를 리턴
+    return root;
+  }
+
+  // 양쪽 하위 노드가 다 일치하지는 않지만, 한 쪽이 일치한다면 그 노드가 최소공통노드가 되기 때문에 그 노드를 리턴
+  return left || right;
+}
+```
+
+### 981. Time Based Key-Value Store
+
+Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key's value at a certain timestamp.
+
+Implement the TimeMap class:
+
+TimeMap() Initializes the object of the data structure.
+void set(String key, String value, int timestamp) Stores the key key with the value value at the given time timestamp.
+String get(String key, int timestamp) Returns a value such that set was called previously, with timestamp_prev <= timestamp. If there are multiple such values, it returns the value associated with the largest timestamp_prev. If there are no values, it returns "".
+
+Example 1:
+
+Input
+["TimeMap", "set", "get", "get", "set", "get", "get"]
+[[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]
+Output
+[null, null, "bar", "bar", null, "bar2", "bar2"]
+
+Explanation
+TimeMap timeMap = new TimeMap();
+timeMap.set("foo", "bar", 1); // store the key "foo" and value "bar" along with timestamp = 1.
+timeMap.get("foo", 1); // return "bar"
+timeMap.get("foo", 3); // return "bar", since there is no value corresponding to foo at timestamp 3 and timestamp 2, then the only value is at timestamp 1 is "bar".
+timeMap.set("foo", "bar2", 4); // store the key "foo" and value "bar2" along with timestamp = 4.
+timeMap.get("foo", 4); // return "bar2"
+timeMap.get("foo", 5); // return "bar2"
+
+Constraints:
+
+1 <= key.length, value.length <= 100
+key and value consist of lowercase English letters and digits.
+1 <= timestamp <= 107
+All the timestamps timestamp of set are strictly increasing.
+At most 2 \* 105 calls will be made to set and get.
+
+#### solution
+
+1. 타임 스탬프가 있는 Map 자료구조를 만드는 문제
+2. set(), get() 메서드를 만들어야함
+   1. set()은 객체로 만들어 `{ [key]: { value, timestamp }[] }` 타입을 가진 자료구조로 생성
+   2. get()은 조금 까다로운데, 조회하고자하는 key의 timestamp값이 기록된 값의 timestamp보다 높다면 가장 가까운 값을 리턴해야함
+      1. 이 과정에서 그냥 for문을 돌리기보단 이진탐색을 이용해 보다 빠르게 탐색하도록한다.
+
+```js
+function TimeMap() {
+  this.root = {};
+}
+
+TimeMap.prototype.set = function (key, value, timestamp) {
+  // 우선 객체에 키, 밸류가 없으면 빈 배열을 생성해줌
+  if (!this.root[key]) {
+    this.root[key] = [];
+  }
+  // { value, timestamp } 값을 key 배열에 push해줌
+  this.root[key].push({ value, timestamp });
+};
+
+TimeMap.prototype.get = function (key, timestamp) {
+  // 해당 key에 대한 값 목록이 없다면 빈 문자열 반환
+  const entries = this.root[key];
+  if (!entries) return '';
+
+  // 이진 탐색을 위한 커서 설정
+  let left = 0;
+  let right = entries.length - 1;
+
+  // 조건을 만족하는 가장 최근 값(가장 큰 timestamp)을 저장할 변수
+  let value = '';
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    // 현재 timestamp가 target 이하라면 후보로 저장하고, 더 큰 값이 있는지 오른쪽 탐색
+    if (entries[mid].timestamp <= timestamp) {
+      value = entries[mid].value;
+      left = mid + 1;
+    } else {
+      // timestamp가 더 작으면 왼쪽으로 탐색 범위 줄이기
+      right = mid - 1;
+    }
+  }
+
+  // 후보로 저장한 값 반환 (없으면 빈 문자열)
+  return value;
+};
+```
