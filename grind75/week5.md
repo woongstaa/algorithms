@@ -435,7 +435,7 @@ Constraints:
 accounts[i][0] consists of English letters.
 accounts[i][j] (for j > 0) is a valid email.
 
-#### solution
+### solution
 
 1. 중복된 이메일이 있으면 병합해야하기 때문에 유니온-파인드를 이용해서 푸는 것이 좋다
 
@@ -504,4 +504,69 @@ for (const group in groups) {
 }
 
 return result;
+```
+
+## 75. Sort Colors
+
+Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+
+We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
+
+You must solve this problem without using the library's sort function.
+
+Example 1:
+
+Input: nums = [2,0,2,1,1,0]
+Output: [0,0,1,1,2,2]
+Example 2:
+
+Input: nums = [2,0,1]
+Output: [0,1,2]
+
+Constraints:
+
+n == nums.length
+1 <= n <= 300
+nums[i] is either 0, 1, or 2.
+
+Follow up: Could you come up with a one-pass algorithm using only constant extra space?
+
+### solution
+
+1. 주어진 배열 속 값은 0, 1, 2로 구성
+2. 배열은 랜덤한 순서로 주어지는데 이를 오름차순 정렬하는 문제
+3. 이 문제는 전형적인 네덜란드 국기 알고리즘 문제
+4. 커서 3개(low, mid, high)를 이용해 문제를 해결
+
+> 처음엔 정렬을 커서를 두개만 두고 양쪽을 비교하면 될 줄 알았지만, 제대로 동작하지 않았음
+
+```js
+function sortColors(nums) {
+  let low = 0;
+  let mid = 0;
+  let high = nums.length - 1;
+
+  // 항상 mid를 기준으로 값을 업데이트 하기 때문에 mid가 high보다 커지면 정렬을 완료했다 판단
+  while (mid <= high) {
+    // case1. nums[mid] === 0 이면 nums[mid]가 왼쪽으로 가야함
+    if (nums[mid] === 0) {
+      // 구조분해할당을 통해 스왑
+      [nums[low], nums[mid]] = [nums[mid], nums[low]];
+      // 값을 스왑했기 때문에 커서들을 업데이트
+      low++;
+      mid++;
+    }
+    // case2. nums[mid] === 1이면 올바르기 때문에 그대로 두고 mid 커서를 다음으로 옮김
+    else if (nums[mid] === 1) {
+      mid++;
+    }
+    // case3. nums[mid] === 2, 값이 오른쪽으로 가야함
+    else {
+      [nums[mid], nums[high]] = [nums[high], nums[mid]];
+      high--;
+    }
+  }
+
+  return nums;
+}
 ```
