@@ -57,3 +57,58 @@ function wordBreak(s, wordDict) {
   return dp[s.length];
 }
 ```
+
+## 416. Partition Equal Subset Sum
+
+Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
+
+Example 1:
+
+Input: nums = [1,5,11,5]
+Output: true
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+Example 2:
+
+Input: nums = [1,2,3,5]
+Output: false
+Explanation: The array cannot be partitioned into equal sum subsets.
+
+Constraints:
+
+1 <= nums.length <= 200
+1 <= nums[i] <= 100
+
+### solution
+
+1. 부분합 문제로 찾고자하는 값은 주어진 값들의 총 합의 절반
+2. 주어진 값의 총합이 짝수가 아니면 두 집합으로 분류가 불가능하기 때문에 false 리턴
+3. 이후는 dp를 이용해 풀이
+
+```js
+function canPartition(nums) {
+  // 총합을 계산
+  const total = nums.reduce((prev, curr) => prev + curr, 0);
+
+  // 총합이 홀수면 false로 리턴
+  if (total % 2 !== 0) return false;
+
+  // 찾고자 하는 값
+  const target = total / 2;
+  // dp 배열 설정 및 0은 true로 설정
+  // dp의 기준은 찾고자 하는 값
+  const dp = new Array(target + 1).fill(false);
+  dp[0] = true;
+
+  // 주어진 배열의 조합이 필요하기 때문에 반복문을 돌림
+  for (const num of nums) {
+    // 중복을 피하기 위해 i는 반대로
+    for (let i = target; i >= num; i--) {
+      // dp[i]가 true면 그대로
+      // dp[i - num]의 의미는 현재 커서인 num을 기존 계산에서 추가했을때 true가 되는지 여부를 체크하는 것, 즉 목표값에 포함이 될 수 있는지의 여부
+      dp[i] = dp[i] || dp[i - num];
+    }
+  }
+
+  return dp[target];
+}
+```
