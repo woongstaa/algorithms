@@ -112,3 +112,249 @@ function canPartition(nums) {
   return dp[target];
 }
 ```
+
+## 54. Spiral Matrix
+
+Given an m x n matrix, return all elements of the matrix in spiral order.
+
+Example 1:
+
+Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,2,3,6,9,8,7,4,5]
+Example 2:
+
+Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+
+Constraints:
+
+m == matrix.length
+n == matrix[i].length
+1 <= m, n <= 10
+-100 <= matrix[i][j] <= 100
+
+### solution
+
+```js
+function spiralOrder(matrix) {
+  // 매트릭스 외곽 영역 설정
+  // 각각의 값은 매트릭스 기준 위/아래/왼쪽/오른쪽 영역의 인덱스를 의미
+  let top = 0;
+  let bottom = matrix.length - 1;
+  let left = 0;
+  let right = matrix[0].length - 1;
+
+  const result = [];
+
+  // 반복문은 위/아래, 왼/오 가 같아질 때까지만
+  // 방향은 항상 왼 > 오 > 아래 > 왼 > 위 순으로 루프하기 때문에 순서대로 작성
+  while (top <= bottom && left <= right) {
+    for (let i = left; i <= right; i++) {
+      result.push(matrix[top][i]);
+    }
+    top++;
+
+    for (let i = top; i <= bottom; i++) {
+      result.push(matrix[i][right]);
+    }
+    right--;
+
+    if (top <= bottom) {
+      for (let i = right; i >= left; i--) {
+        result.push(matrix[bottom][i]);
+      }
+      bottom--;
+    }
+
+    if (left <= right) {
+      for (let i = bottom; i >= top; i--) {
+        result.push(matrix[i][left]);
+      }
+      left++;
+    }
+  }
+
+  return result;
+}
+```
+
+## 78. Subsets
+
+Given an integer array nums of unique elements, return all possible subsets (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+
+Example 1:
+
+Input: nums = [1,2,3]
+Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+Example 2:
+
+Input: nums = [0]
+Output: [[],[0]]
+
+Constraints:
+
+1 <= nums.length <= 10
+-10 <= nums[i] <= 10
+All the numbers of nums are unique.
+
+### solution
+
+```js
+function subsets(nums) {
+  const result = [];
+
+  function backtrack(start, path) {
+    // 현재 path를 결과에 추가 (부분 집합 하나 생성됨)
+    result.push([...path]);
+
+    // 현재 인덱스부터 nums의 끝까지 반복
+    for (let i = start; i < nums.length; i++) {
+      // 현재 원소 추가
+      path.push(nums[i]);
+
+      // 다음 인덱스로 재귀 호출 → 더 깊은 조합 탐색
+      backtrack(i + 1, path);
+
+      // 마지막에 넣은 값을 제거해서 다음 조합 준비
+      path.pop(); // 백트래킹
+    }
+  }
+
+  // 백트래킹 시작
+  backtrack(0, []);
+  return result;
+}
+```
+
+## 199. Binary Tree Right Side View
+
+Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+
+Example 1:
+
+Input: root = [1,2,3,null,5,null,4]
+
+Output: [1,3,4]
+
+Explanation:
+
+Example 2:
+
+Input: root = [1,2,3,4,null,null,null,5]
+
+Output: [1,3,4,5]
+
+Explanation:
+
+Example 3:
+
+Input: root = [1,null,3]
+
+Output: [1,3]
+
+Example 4:
+
+Input: root = []
+
+Output: []
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 100].
+-100 <= Node.val <= 100
+
+### solution
+
+1. 노드가 있으면 같은 레벨에서 가장 오른쪽 노드를 리턴하는 문제
+2. DFS / BFS 모두 사용 가능
+
+#### DFS
+
+```js
+class TreeNode {
+  constructor(val, left = null, right = null) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+class Queue {
+  items = [];
+  front = 0;
+  rear = 0;
+
+  constructor(value) {
+    this.items.push(value);
+    this.rear++;
+  }
+
+  push(value) {
+    this.items.push(value);
+    this.rear++;
+  }
+
+  pop() {
+    return this.items[this.front++];
+  }
+
+  size() {
+    return this.rear - this.front;
+  }
+
+  isEmpty() {
+    return this.rear === this.front;
+  }
+}
+```
+
+```js
+function rightSideView(root) {
+  const result = [];
+
+  function dfs(node, depth) {
+    if (!node) return;
+
+    if (depth === result.length) {
+      result.push(node.val);
+    }
+
+    dfs(node.right, depth + 1);
+    dfs(node.left, depth + 1);
+  }
+
+  dfs(root, 0);
+
+  return result;
+}
+```
+
+#### BFS
+
+```js
+function rightSideView(root) {
+  if (!root) return [];
+
+  const result = [];
+  const queue = new Queue(root);
+
+  while (!queue.isEmpty()) {
+    const levelSize = queue.size();
+
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.pop();
+
+      if (i === levelSize - 1) {
+        result.push(node.val);
+      }
+
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+  }
+
+  return result;
+}
+```
