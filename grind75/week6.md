@@ -490,3 +490,124 @@ function uniquePath(m, n) {
   return dp[n - 1];
 }
 ```
+
+## 105. Construct Binary Tree from Preorder and Inorder Traversal
+
+Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree.
+
+Example 1:
+
+Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+Output: [3,9,20,null,null,15,7]
+Example 2:
+
+Input: preorder = [-1], inorder = [-1]
+Output: [-1]
+
+Constraints:
+
+1 <= preorder.length <= 3000
+inorder.length == preorder.length
+-3000 <= preorder[i], inorder[i] <= 3000
+preorder and inorder consist of unique values.
+Each value of inorder also appears in preorder.
+preorder is guaranteed to be the preorder traversal of the tree.
+inorder is guaranteed to be the inorder traversal of the tree.
+
+### solution
+
+1. 이 문제는 트리구조를 전위순회한 배열과 중위순회한 배열을 주고 올바른 트리 구조를 구현하는 문제이다.
+2. 전위순회(preorder)는 루트를 기준으로 트리를 구성하는 순서를,
+3. 중위순회(inorder)는 그 루트를 중심으로 왼쪽과 오른쪽 서브트리를 분리하는 기준을 제공한다.
+4. 이 개념을 활용해서 DFS를 이용해 트리 구조를 만들어준다.
+
+```js
+function buildTree(preorder, inorder) {
+  // 중위순회 인덱싱을 위한 Map 생성
+  const inorderMap = new Map();
+
+  // { val: index } 구조로 Map에 값을 집어넣음
+  inorder.forEach((val, index) => {
+    inorderMap.set(val, index);
+  });
+
+  // 루트노드의 값을 구하기 위한 전위순회 인덱스 커서
+  let preIndex = 0;
+
+  // 트리를 생성하기 위한 DFS 함수
+  // left, right는 inorder의 범위를 정하는 포인터
+  function buildNode(left, right) {
+    // left가 right보면 크면 트리구조가 아니기 때문에 null 리턴
+    if (left > right) return null;
+
+    // 전위순회에서 현재 루트 값을 가져오고, 커서를 증가시킨다
+    const currNodeVal = preorder[preIndex++];
+    // 위 값을 이용해 트리를 생성
+    const node = new TreeNode(currNodeVal);
+    // 루트노드의 값이 전위순회 배열에 몇번째에 있는지 체크
+    const inorderIndex = inorderMap.get(currNodeVal);
+
+    // 왼쪽 노드의 포인터와 오른쪽 노드의 포인터를 위 값을 활용해 붙여줌
+    node.left = buildNode(left, inorderIndex - 1);
+    node.right = buildNode(inorderIndex + 1, right);
+
+    return node;
+  }
+
+  return buildNode(0, inorder.length - 1);
+}
+```
+
+## 11. Container With Most Water
+
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+Notice that you may not slant the container.
+
+Example 1:
+
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+Example 2:
+
+Input: height = [1,1]
+Output: 1
+
+Constraints:
+
+n == height.length
+2 <= n <= 105
+0 <= height[i] <= 104
+
+### solution
+
+1. 이 문제는 투 포인터를 이용해 계산한 값 중 가장 큰 값을 리턴하는 방식으로 풀이한다
+
+```js
+function maxArea(height) {
+  let left = 0;
+  let right = height.length - 1;
+  let max = 0;
+
+  while (left < right) {
+    const w = right - left;
+    const h = Math.min(height[left], height[right]);
+    const size = w * h;
+
+    max = Math.max(max, size);
+
+    if (height[left] < height[right]) {
+      left++;
+    } else {
+      right--;
+    }
+  }
+
+  return max;
+}
+```
