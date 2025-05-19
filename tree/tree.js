@@ -218,7 +218,7 @@ function escapeFromMaze(maps) {
 
   while (!q.isEmpty()) {
     const [y, x, k, time] = q.pop();
-    console.log(y, x, k, time);
+    // console.log(y, x, k, time);
 
     if (y === endY && x === endX && k === 1) {
       return time;
@@ -242,4 +242,127 @@ function escapeFromMaze(maps) {
   return -1;
 }
 
-console.log(escapeFromMaze(['SOOOL', 'XXXXO', 'OOOOO', 'OXXXX', 'OOOOE']));
+console.log(escapeFromMaze('MAZE_1 :::', ['SOOOL', 'XXXXO', 'OOOOO', 'OXXXX', 'OOOOE']));
+
+function escapeFromMaze2(maps) {
+  // 핵심은 S > L 이 선행되고,  L > E 가 되어야한다
+  // 각각의 도달 기준이 정해져있기 때문에 bfs가 더 적합
+  // maps가 m * n 매트릭스가 아니기 때문에 재가공 후에 작업
+  const maze = maps.map((row) => row.split(''));
+  const m = maze.length;
+  const n = maze[0].length;
+
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+    [1, 0]
+  ];
+
+  let start, lever, end;
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (maze[i][j] === 'S') {
+        start = [i, j];
+      } else if (maze[i][j] === 'L') {
+        lever = [i, j];
+      } else if (maze[i][j] === 'E') {
+        end = [i, j];
+      }
+    }
+  }
+
+  function bfs(from, target) {
+    const queue = [[...from, 1]];
+    const visited = new Set();
+    visited.add(`${from[0]} ${from[1]}`);
+
+    while (queue.length) {
+      const [x, y, time] = queue.shift();
+
+      for (const [dx, dy] of directions) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < m && ny < n) {
+          if (maze[nx][ny] !== 'X' && !visited.has(`${nx} ${ny}`)) {
+            if (maze[nx][ny] === target) {
+              return time;
+            }
+
+            queue.push([nx, ny, time + 1]);
+            visited.add(`${nx} ${ny}`);
+          }
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  const startToLever = bfs(start, 'L');
+  const leverToEnd = startToLever !== -1 ? bfs(lever, 'E') : -1;
+
+  return startToLever !== -1 && leverToEnd !== -1 ? startToLever + leverToEnd : -1;
+}
+
+// console.log('MAZE_2 :::', escapeFromMaze2(['SOOOL', 'XXXXO', 'OOOOO', 'OXXXX', 'OOOOE']));
+
+function sheepAndWolf(info, edges) {
+  // 모든 노드를 탐색해서 최대값을 찾아야하기 때문에 DFS가 적합
+  // 또한 기준에 맞지 않으면 노드를 되돌리고 다음 하위노드로 가야하기 때문에 백트래킹이 적합
+  // 노드간 관계를 나타낸 edges가 있기 때문에 인접리스트로 그래프를 표현하는것이 적합
+  // 인접리스트는 index가 노드, 내부 값은 자식노드로 표현된다
+  const graph = Array.from({ length: info.length }, () => []);
+  let maxSheep = 0;
+
+  for (const [parent, child] of edges) {
+    graph[parent].push(child);
+  }
+
+  // 여기서 path는 앞으로 탐색할 노드를 의미한다
+  function dfs(sheep, wolf, path) {
+    if (sheep <= wolf) return;
+
+    maxSheep = Math.max(sheep, maxSheep);
+
+    for (let i = 0; i < path.length; i++) {
+      const node = path[i];
+      const childNode = graph[node];
+
+      path.splice(i, 1); // 자신을 제외하고 새로운 노드를 만듦
+      path.push(...childNode);
+
+      if (info[node] === 0) {
+        dfs(sheep + 1, wolf, path);
+      } else {
+        dfs(sheep, wolf + 1, path);
+      }
+    }
+  }
+
+  dfs(1, 0, graph[0]);
+
+  return maxSheep;
+}
+
+console.log(
+  'SHEEP_WOLF :::',
+  sheepAndWolf(
+    [0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1],
+    [
+      [0, 1],
+      [1, 2],
+      [1, 4],
+      [0, 8],
+      [8, 7],
+      [9, 10],
+      [9, 11],
+      [4, 3],
+      [6, 5],
+      [4, 6],
+      [8, 9]
+    ]
+  )
+);
