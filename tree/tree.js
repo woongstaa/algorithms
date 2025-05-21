@@ -347,22 +347,103 @@ function sheepAndWolf(info, edges) {
   return maxSheep;
 }
 
-console.log(
-  'SHEEP_WOLF :::',
-  sheepAndWolf(
-    [0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1],
-    [
-      [0, 1],
-      [1, 2],
-      [1, 4],
-      [0, 8],
-      [8, 7],
-      [9, 10],
-      [9, 11],
-      [4, 3],
-      [6, 5],
-      [4, 6],
-      [8, 9]
-    ]
-  )
-);
+// console.log(
+//   'SHEEP_WOLF :::',
+//   sheepAndWolf(
+//     [0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1],
+//     [
+//       [0, 1],
+//       [1, 2],
+//       [1, 4],
+//       [0, 8],
+//       [8, 7],
+//       [9, 10],
+//       [9, 11],
+//       [4, 3],
+//       [6, 5],
+//       [4, 6],
+//       [8, 9]
+//     ]
+//   )
+// );
+
+class TreeNode {
+  constructor(index, x, y, left = null, right = null) {
+    this.index = index;
+    this.x = x;
+    this.y = y;
+    this.left = left;
+    this.right = right;
+  }
+
+  insert(child) {
+    if (child.x < this.x) {
+      if (!!this.left) {
+        this.left.insert(child);
+      } else {
+        this.left = child;
+      }
+    } else {
+      if (!!this.right) {
+        this.right.insert(child);
+      } else {
+        this.right = child;
+      }
+    }
+  }
+}
+
+function routeFindGame(nodeInfo) {
+  // 주어진 nodeInfo의 index + 1이 노드의 value
+  // y가 높으면 상위노드
+  // y가 같으면, x의 크고 작음으로 노드의 좌우를 결정
+  // 이진트리를 구현한 뒤, 전위, 후위순회를 리턴
+  const pre = [];
+  const post = [];
+  const nodes = nodeInfo.map(([x, y], index) => new TreeNode(index + 1, x, y));
+  nodes.sort((a, b) => b.y - a.y || a.x - b.x);
+
+  const root = nodes[0];
+
+  for (let i = 1; i < nodes.length; i++) {
+    root.insert(nodes[i]);
+  }
+
+  function preOrder(node) {
+    if (!node) return;
+
+    pre.push(node.index);
+
+    preOrder(node.left);
+    preOrder(node.right);
+  }
+
+  function postOrder(node) {
+    if (!node) return;
+
+    postOrder(node.left);
+    postOrder(node.right);
+
+    post.push(node.index);
+  }
+
+  preOrder(root);
+  postOrder(root);
+
+  return [pre, post];
+}
+
+// console.log(
+//   'FIND_ROUTE :::',
+//   routeFindGame([
+//     [5, 3],
+//     [11, 5],
+//     [13, 3],
+//     [3, 5],
+//     [6, 1],
+//     [1, 3],
+//     [8, 6],
+//     [7, 2],
+//     [2, 2]
+//   ])
+// );
