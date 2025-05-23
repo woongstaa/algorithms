@@ -90,4 +90,62 @@ function contacts(phone_book) {
   return true;
 }
 
-console.log('PHONE_BOOK :::', contacts(['119', '97674223', '1195524421']));
+// console.log('PHONE_BOOK :::', contacts(['119', '97674223', '1195524421']));
+
+function connectIsland(n, costs) {
+  const find = (parents, x) => {
+    if (parents[x] === x) {
+      return x;
+    }
+
+    parents = find(parents, parents[x]);
+
+    return parents;
+  };
+
+  const union = (parents, rank, x, y) => {
+    const rootX = find(parents, x);
+    const rootY = find(parents, y);
+
+    if (rank[rootX] < rank[rootY]) {
+      parents[rootX] = rootY;
+    } else if (rank[rootX] > rank[rootY]) {
+      parents[rootY] = rootX;
+    } else {
+      parents[rootY] = rootX;
+      rank[rootX]++;
+    }
+  };
+
+  costs.sort((a, b) => a[2] - b[2]);
+
+  const parents = Array.from({ length: n }, (_, i) => i);
+  const rank = Array(n).fill(0);
+
+  let minCost = 0;
+  let edges = 0;
+
+  for (const [from, to, cost] of costs) {
+    if (edges === n - 1) break;
+
+    const rootOfFrom = find(parents, from);
+    const rootOfTo = find(parents, to);
+
+    if (rootOfFrom !== rootOfTo) {
+      union(parents, rank, rootOfFrom, rootOfTo);
+      edges++;
+      minCost += cost;
+    }
+  }
+
+  console.log('CONNECT_ISLAND :::', minCost);
+  return minCost;
+}
+
+connectIsland(4, [
+  [0, 1, 1],
+  [0, 2, 2],
+  [1, 2, 5],
+  [1, 3, 1],
+  [2, 3, 8]
+]);
