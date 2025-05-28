@@ -134,11 +134,115 @@ function dijkstraExample(graph, start) {
   return [distances, sortedPaths];
 }
 
-dijkstraExample(
-  {
-    A: { B: 9, C: 3 },
-    B: { A: 5 },
-    C: { B: 1 }
-  },
-  'A'
+// dijkstraExample(
+//   {
+//     A: { B: 9, C: 3 },
+//     B: { A: 5 },
+//     C: { B: 1 }
+//   },
+//   'A'
+// );
+
+function bellmanFord(graph, source) {
+  const numVertices = graph.length;
+
+  const distance = Array(numVertices).fill(Infinity);
+  distance[source] = 0;
+
+  const predecessor = Array(numVertices).fill(null);
+
+  for (let temp = 0; temp < numVertices - 1; temp++) {
+    for (let u = 0; u < numVertices; u++) {
+      for (const [v, weight] of graph[u]) {
+        if (distance[u] + weight < distance[v]) {
+          distance[v] = distance[u] + weight;
+          predecessor[v] = u;
+        }
+      }
+    }
+  }
+
+  for (let u = 0; u < numVertices; u++) {
+    for (const [v, weight] of graph[u]) {
+      if (distance[u] + weight < distance[v]) {
+        return [-1];
+      }
+    }
+  }
+
+  console.log([distance, predecessor]);
+}
+
+// bellmanFord();
+
+function gameMap(maps) {
+  const m = maps.length;
+  const n = maps[0].length;
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+    [1, 0]
+  ];
+  const visited = new Set();
+  const queue = [[0, 0, 1]];
+  visited.add('0 0');
+
+  while (queue.length) {
+    const [x, y, time] = queue.shift();
+
+    if (x === m - 1 && y === n - 1) return time;
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < m && ny < n) {
+        if (!visited.has(`${nx} ${ny}`) && maps[nx][ny] !== 0) {
+          queue.push([nx, ny, time + 1]);
+          visited.add(`${nx} ${ny}`);
+        }
+      }
+    }
+  }
+}
+
+console.log(
+  gameMap([
+    [1, 0, 1, 1, 1],
+    [1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1],
+    [1, 1, 1, 0, 1],
+    [0, 0, 0, 0, 1]
+  ])
 );
+
+function network(n, computers) {
+  const visited = Array(n).fill(false);
+
+  function dfs(node) {
+    visited[node] = true;
+
+    for (let i = 0; i < n; i++) {
+      if (!visited[i] && computers[node][i]) {
+        dfs(i);
+      }
+    }
+  }
+
+  let count = 0;
+
+  for (let i = 0; i < n; i++) {
+    if (!visited[i]) {
+      dfs(i);
+      count++;
+    }
+  }
+
+  return count;
+}
+
+network(3, [
+  [1, 1, 0],
+  [1, 1, 0],
+  [0, 0, 1]
+]);
