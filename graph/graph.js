@@ -27,7 +27,7 @@ class MinHeap {
     return this.items.length;
   }
 
-  insert(item) {
+  push(item) {
     this.items.push(item);
     this.bubbleUp();
   }
@@ -71,11 +71,11 @@ class MinHeap {
 
       let smallerChild =
         rightChild < this.size() && //
-        this.items[rightChild][0] < this.items[leftChild][0]
+        this.items[rightChild] < this.items[leftChild]
           ? rightChild
           : leftChild;
 
-      if (this.items[index][0] <= this.items[smallerChild][0]) {
+      if (this.items[index] <= this.items[smallerChild]) {
         break;
       }
 
@@ -246,3 +246,48 @@ network(3, [
   [1, 1, 0],
   [0, 0, 1]
 ]);
+
+function delivery(n, road, k) {
+  const graph = Array.from({ length: n + 1 }, () => []);
+  const hours = Array(n + 1).fill(Infinity);
+  hours[1] = 0;
+
+  for (const [from, to, hour] of road) {
+    graph[from].push([to, hour]);
+    graph[to].push([from, hour]);
+  }
+
+  const heap = new MinHeap();
+  heap.push([1, 0]);
+
+  while (heap.size() > 0) {
+    const [node, hour] = heap.pop();
+
+    for (const [nextNode, nextHour] of graph[node]) {
+      const totalHour = hour + nextHour;
+
+      if (totalHour < hours[nextNode]) {
+        hours[nextNode] = totalHour;
+        heap.push([nextNode, totalHour]);
+      }
+    }
+  }
+
+  return hours.filter((hour) => hour <= k).length;
+}
+
+console.log(
+  'DELIVERY :::',
+  delivery(
+    5,
+    [
+      [1, 2, 1],
+      [2, 3, 3],
+      [5, 2, 2],
+      [1, 4, 2],
+      [5, 3, 1],
+      [5, 4, 2]
+    ],
+    3
+  )
+);
